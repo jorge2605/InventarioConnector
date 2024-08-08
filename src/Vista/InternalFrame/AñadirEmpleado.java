@@ -97,6 +97,7 @@ public class AñadirEmpleado extends javax.swing.JInternalFrame implements Focus
         txtReloj.setText("");
         txtContra.setText("");
         txtTelefono.setText("");
+        txtCorreo.setText("");
         cmbRol.setSelectedIndex(0);
     }
     
@@ -107,6 +108,7 @@ public class AñadirEmpleado extends javax.swing.JInternalFrame implements Focus
         txtEReloj.setText("");
         txtEContra.setText("");
         txtETelefono.setText("");
+        txtCorreo.setText("");
         cmbERol.setSelectedIndex(0);
     }
     
@@ -145,7 +147,7 @@ public class AñadirEmpleado extends javax.swing.JInternalFrame implements Focus
         
         java.awt.GridBagConstraints gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridy = 9;
         gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         gridBagConstraints.ipadx = 10;
@@ -161,7 +163,7 @@ public class AñadirEmpleado extends javax.swing.JInternalFrame implements Focus
         
         java.awt.GridBagConstraints gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 7;
         gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         gridBagConstraints.ipadx = 10;
@@ -191,6 +193,8 @@ public class AñadirEmpleado extends javax.swing.JInternalFrame implements Focus
         txtReloj.addFocusListener(this);
         txtTelefono.addFocusListener(this);
         txtETelefono.addFocusListener(this);
+        txtCorreo.addFocusListener(this);
+        txtECorreo.addFocusListener(this);
         addCmb();
         addCmbTel();
         ((javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI()).setNorthPane(null);
@@ -230,6 +234,8 @@ public class AñadirEmpleado extends javax.swing.JInternalFrame implements Focus
         txtContra = new javax.swing.JPasswordField();
         lblRol = new javax.swing.JLabel();
         txtTelefono = new javax.swing.JFormattedTextField();
+        lblCorreo = new javax.swing.JLabel();
+        txtCorreo = new javax.swing.JTextField();
         jPanel8 = new javax.swing.JPanel();
         lblEReloj = new javax.swing.JLabel();
         txtEReloj = new javax.swing.JTextField();
@@ -251,6 +257,8 @@ public class AñadirEmpleado extends javax.swing.JInternalFrame implements Focus
         txtEContra = new javax.swing.JPasswordField();
         lblETelefono = new javax.swing.JLabel();
         txtETelefono = new javax.swing.JFormattedTextField();
+        lblECorreo = new javax.swing.JLabel();
+        txtECorreo = new javax.swing.JTextField();
         jPanel7 = new javax.swing.JPanel();
         jLabel12 = new javax.swing.JLabel();
         jPanel10 = new javax.swing.JPanel();
@@ -306,7 +314,7 @@ public class AñadirEmpleado extends javax.swing.JInternalFrame implements Focus
         java.awt.GridBagLayout jPanel6Layout = new java.awt.GridBagLayout();
         jPanel6Layout.columnWidths = new int[] {1, 1};
         jPanel6Layout.columnWeights = new double[] {1.0, 1.0};
-        jPanel6Layout.rowWeights = new double[] {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0};
+        jPanel6Layout.rowWeights = new double[] {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0};
         jPanel6.setLayout(jPanel6Layout);
 
         lblNombre.setBackground(new java.awt.Color(204, 204, 204));
@@ -399,7 +407,7 @@ public class AñadirEmpleado extends javax.swing.JInternalFrame implements Focus
         lblTelefono.setText("Telefono:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 8;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(7, 100, 7, 100);
@@ -416,7 +424,7 @@ public class AñadirEmpleado extends javax.swing.JInternalFrame implements Focus
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 11;
+        gridBagConstraints.gridy = 13;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(7, 100, 7, 100);
@@ -429,7 +437,7 @@ public class AñadirEmpleado extends javax.swing.JInternalFrame implements Focus
         lblAcceso.setText("Accesos:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 12;
+        gridBagConstraints.gridy = 14;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(7, 100, 7, 100);
@@ -465,7 +473,7 @@ public class AñadirEmpleado extends javax.swing.JInternalFrame implements Focus
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 13;
+        gridBagConstraints.gridy = 15;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(7, 100, 7, 100);
@@ -499,7 +507,7 @@ public class AñadirEmpleado extends javax.swing.JInternalFrame implements Focus
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 14;
+        gridBagConstraints.gridy = 16;
         gridBagConstraints.gridwidth = 2;
         jPanel6.add(pnlGuardar, gridBagConstraints);
 
@@ -510,7 +518,7 @@ public class AñadirEmpleado extends javax.swing.JInternalFrame implements Focus
         lblPass.setText("Contraseña:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 8;
+        gridBagConstraints.gridy = 10;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(7, 100, 7, 100);
@@ -522,7 +530,7 @@ public class AñadirEmpleado extends javax.swing.JInternalFrame implements Focus
         txtContra.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(204, 204, 204)));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 9;
+        gridBagConstraints.gridy = 11;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.ipady = 8;
@@ -536,7 +544,7 @@ public class AñadirEmpleado extends javax.swing.JInternalFrame implements Focus
         lblRol.setText("Rol:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 10;
+        gridBagConstraints.gridy = 12;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(7, 100, 7, 100);
@@ -553,11 +561,42 @@ public class AñadirEmpleado extends javax.swing.JInternalFrame implements Focus
         txtTelefono.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridy = 9;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.ipady = 8;
         gridBagConstraints.insets = new java.awt.Insets(7, 10, 7, 100);
         jPanel6.add(txtTelefono, gridBagConstraints);
+
+        lblCorreo.setBackground(new java.awt.Color(204, 204, 204));
+        lblCorreo.setFont(new java.awt.Font("Roboto", 1, 12)); // NOI18N
+        lblCorreo.setForeground(new java.awt.Color(204, 204, 204));
+        lblCorreo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblCorreo.setText("Correo");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(7, 100, 7, 100);
+        jPanel6.add(lblCorreo, gridBagConstraints);
+
+        txtCorreo.setBackground(new java.awt.Color(255, 255, 255));
+        txtCorreo.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
+        txtCorreo.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtCorreo.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(204, 204, 204)));
+        txtCorreo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCorreoActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipady = 8;
+        gridBagConstraints.insets = new java.awt.Insets(7, 100, 7, 100);
+        jPanel6.add(txtCorreo, gridBagConstraints);
 
         jTabbedPane1.addTab("Añadir nuevo empleado", jPanel6);
 
@@ -565,7 +604,7 @@ public class AñadirEmpleado extends javax.swing.JInternalFrame implements Focus
         java.awt.GridBagLayout jPanel8Layout = new java.awt.GridBagLayout();
         jPanel8Layout.columnWidths = new int[] {1, 1};
         jPanel8Layout.columnWeights = new double[] {1.0, 1.0};
-        jPanel8Layout.rowWeights = new double[] {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0};
+        jPanel8Layout.rowWeights = new double[] {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0};
         jPanel8.setLayout(jPanel8Layout);
 
         lblEReloj.setFont(new java.awt.Font("Roboto", 1, 12)); // NOI18N
@@ -650,7 +689,7 @@ public class AñadirEmpleado extends javax.swing.JInternalFrame implements Focus
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridy = 9;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.ipady = 10;
@@ -663,7 +702,7 @@ public class AñadirEmpleado extends javax.swing.JInternalFrame implements Focus
         jLabel10.setText("Accesos:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 8;
+        gridBagConstraints.gridy = 10;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(7, 100, 7, 100);
@@ -699,7 +738,7 @@ public class AñadirEmpleado extends javax.swing.JInternalFrame implements Focus
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 9;
+        gridBagConstraints.gridy = 11;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(7, 100, 7, 100);
@@ -733,7 +772,7 @@ public class AñadirEmpleado extends javax.swing.JInternalFrame implements Focus
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 10;
+        gridBagConstraints.gridy = 12;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.insets = new java.awt.Insets(14, 14, 14, 14);
         jPanel8.add(pnlEditar, gridBagConstraints);
@@ -745,7 +784,7 @@ public class AñadirEmpleado extends javax.swing.JInternalFrame implements Focus
         lblEPass.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 8;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(7, 200, 7, 10);
         jPanel8.add(lblEPass, gridBagConstraints);
@@ -756,7 +795,7 @@ public class AñadirEmpleado extends javax.swing.JInternalFrame implements Focus
         txtEContra.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(204, 204, 204)));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 8;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.ipady = 8;
         gridBagConstraints.insets = new java.awt.Insets(7, 10, 7, 200);
@@ -769,7 +808,7 @@ public class AñadirEmpleado extends javax.swing.JInternalFrame implements Focus
         lblETelefono.setText("Telefono:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(7, 100, 7, 100);
@@ -786,11 +825,40 @@ public class AñadirEmpleado extends javax.swing.JInternalFrame implements Focus
         txtETelefono.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 7;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.ipady = 8;
         gridBagConstraints.insets = new java.awt.Insets(0, 10, 0, 200);
         jPanel8.add(txtETelefono, gridBagConstraints);
+
+        lblECorreo.setFont(new java.awt.Font("Roboto", 1, 12)); // NOI18N
+        lblECorreo.setForeground(new java.awt.Color(204, 204, 204));
+        lblECorreo.setText("Correo");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.ipady = 8;
+        gridBagConstraints.insets = new java.awt.Insets(0, 200, 0, 200);
+        jPanel8.add(lblECorreo, gridBagConstraints);
+
+        txtECorreo.setBackground(new java.awt.Color(255, 255, 255));
+        txtECorreo.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
+        txtECorreo.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(204, 204, 204)));
+        txtECorreo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtECorreoActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.ipady = 8;
+        gridBagConstraints.insets = new java.awt.Insets(0, 200, 0, 200);
+        jPanel8.add(txtECorreo, gridBagConstraints);
 
         jTabbedPane1.addTab("Editar empelados", jPanel8);
 
@@ -939,9 +1007,9 @@ public class AñadirEmpleado extends javax.swing.JInternalFrame implements Focus
             }
 
             if(num == null){
-                String sql2 = "insert into users (name, lastname, employeeNumber, role, requisiciones, almacen, entradas, salidas, registro, password) values(?,?,?,?,?,?,?,?,?,AES_ENCRYPT(?,'mi_llave'))";
+                String sql2 = "insert into users (name, lastname, employeeNumber, role, requisiciones, almacen, entradas, salidas, registro, password, correo) values(?,?,?,?,?,?,?,?,?,AES_ENCRYPT(?,'mi_llave',?))";
                 if(!txtTelefono.getText().equals("(   )-   -    ")){
-                    sql2 = "insert into users (name, lastname, employeeNumber, role, requisiciones, almacen, entradas, salidas, registro, password, telefono) values(?,?,?,?,?,?,?,?,?,AES_ENCRYPT(?,'mi_llave'),?)";
+                    sql2 = "insert into users (name, lastname, employeeNumber, role, requisiciones, almacen, entradas, salidas, registro, password, telefono, correo) values(?,?,?,?,?,?,?,?,?,AES_ENCRYPT(?,'mi_llave'),?,?)";
                 }
                 PreparedStatement pst = con.prepareStatement(sql2);
                 
@@ -962,6 +1030,9 @@ public class AñadirEmpleado extends javax.swing.JInternalFrame implements Focus
                 pst.setBlob(10, blob);
                 if(!txtTelefono.getText().equals("(   )-   -    ")){
                     pst.setString(11, telefono);
+                    pst.setString(12, txtCorreo.getText());
+                }else{
+                    pst.setString(11, txtCorreo.getText());
                 }
 
                 int n = pst.executeUpdate();
@@ -1040,10 +1111,10 @@ public class AñadirEmpleado extends javax.swing.JInternalFrame implements Focus
             con = con1.getConnection();
             Statement st = con.createStatement();
             String sql = "update users set name = ?, lastname = ?, role = ?, requisiciones = ?, almacen = ?, entradas = ?, salidas = ?, registro = ?, password = AES_ENCRYPT(?,'mi_llave')"
-                    + " where employeeNumber = ?";
+                    + ", correo = ? where employeeNumber = ?";
             if(!txtETelefono.getText().equals("(   )-   -    ")){
                 sql = "update users set name = ?, lastname = ?, role = ?, requisiciones = ?, almacen = ?, entradas = ?, salidas = ?, registro = ?, password = AES_ENCRYPT(?,'mi_llave')"
-                    + ", telefono = ? where employeeNumber = ?";
+                    + ", telefono = ?, correo = ? where employeeNumber = ?";
             }
             PreparedStatement pst = con.prepareStatement(sql);
             
@@ -1062,10 +1133,12 @@ public class AñadirEmpleado extends javax.swing.JInternalFrame implements Focus
             pst.setBoolean(8, Eempleados.isSelected());
             pst.setBlob(9, blob);
             if(txtETelefono.getText().equals("(   )-   -    ")){
-                pst.setString(10, numeroEmpleado);
+                pst.setString(10, txtCorreo.getText());
+                pst.setString(11, numeroEmpleado);
             }else{
                 pst.setString(10, telefono);
-                pst.setString(11, numeroEmpleado);
+                pst.setString(11, txtECorreo.getText());
+                pst.setString(12, numeroEmpleado);
             }
             int n = pst.executeUpdate();
             
@@ -1090,6 +1163,7 @@ public class AñadirEmpleado extends javax.swing.JInternalFrame implements Focus
             ResultSet rs = st.executeQuery(sql);
             while(rs.next()){
                 txtENombre.setText(rs.getString("name"));
+                txtECorreo.setText(rs.getString("correo"));
                 String tel = rs.getString("telefono");
                 if(tel != null){
                     String lada = tel.substring(0,3);
@@ -1179,6 +1253,14 @@ public class AñadirEmpleado extends javax.swing.JInternalFrame implements Focus
         
     }//GEN-LAST:event_txtRelojActionPerformed
 
+    private void txtCorreoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCorreoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCorreoActionPerformed
+
+    private void txtECorreoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtECorreoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtECorreoActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox Ealmacen;
@@ -1216,7 +1298,9 @@ public class AñadirEmpleado extends javax.swing.JInternalFrame implements Focus
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel lblAcceso;
     private javax.swing.JLabel lblApellido;
+    private javax.swing.JLabel lblCorreo;
     private javax.swing.JLabel lblEApellido;
+    private javax.swing.JLabel lblECorreo;
     private javax.swing.JLabel lblENombre;
     private javax.swing.JLabel lblEPass;
     private javax.swing.JLabel lblEReloj;
@@ -1233,8 +1317,10 @@ public class AñadirEmpleado extends javax.swing.JInternalFrame implements Focus
     private javax.swing.JCheckBox salidas;
     private javax.swing.JTextField txtApellido;
     private javax.swing.JPasswordField txtContra;
+    private javax.swing.JTextField txtCorreo;
     private javax.swing.JTextField txtEApellido;
     private javax.swing.JPasswordField txtEContra;
+    private javax.swing.JTextField txtECorreo;
     private javax.swing.JTextField txtENombre;
     private javax.swing.JTextField txtEReloj;
     private javax.swing.JFormattedTextField txtETelefono;
@@ -1265,6 +1351,10 @@ public class AñadirEmpleado extends javax.swing.JInternalFrame implements Focus
             setBordeA(txtTelefono,lblTelefono);
         }else if(e.getSource() == txtETelefono){
             setBordeA(txtETelefono,lblETelefono);
+        }else if(e.getSource() == txtECorreo){
+            setBordeA(txtECorreo,lblECorreo);
+        }else if(e.getSource() == txtCorreo){
+            setBordeA(txtCorreo,lblCorreo);
         }
     }
 
@@ -1290,6 +1380,10 @@ public class AñadirEmpleado extends javax.swing.JInternalFrame implements Focus
             setBordeG(txtTelefono, lblTelefono);
         }else if(e.getSource() == txtETelefono){
             setBordeG(txtETelefono, lblETelefono);
+        }else if(e.getSource() == txtECorreo){
+            setBordeG(txtECorreo, lblECorreo);
+        }else if(e.getSource() == txtCorreo){
+            setBordeG(txtCorreo, lblCorreo);
         }
     }
 }

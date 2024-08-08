@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Stack;
 
 public class altaArticulos extends javax.swing.JDialog {
 
@@ -20,7 +21,7 @@ public class altaArticulos extends javax.swing.JDialog {
     public Almacen almacen;
     public String oc;
     public boolean guardado;
-    
+
     public boolean verificarRequisicion(){
         try{
             Connection con;
@@ -93,8 +94,9 @@ public class altaArticulos extends javax.swing.JDialog {
         }
     }
     
-    public boolean getGuardado(){
+    public boolean getGuardado(Almacen almacen){
         this.setVisible(true);
+        this.almacen = almacen;
         return guardado;
     }
     
@@ -530,6 +532,10 @@ public class altaArticulos extends javax.swing.JDialog {
                         pst2.executeUpdate();
                     }
                     JOptionPane.showMessageDialog(this, "Datos guardados, articulo " + mns + req);
+                    almacen.material.push(txtCodigo.getText());
+                    almacen.cant.push(txtCantidad.getText());
+                    double cantRe = cantidad - (cant + cantidadRecibida);
+                    almacen.cantR.push(String.valueOf(cantRe));
                     guardado = true;
                     dispose();
                 }

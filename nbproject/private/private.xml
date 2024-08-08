@@ -6,11 +6,12 @@
             <file>file:/C:/Users/USUARIO%201/Documents/NetBeansProjects/InventarioConnector/src/Vista/Inicio.java</file>
             <file>file:/C:/Users/USUARIO%201/Documents/NetBeansProjects/InventarioConnector/src/Vista/InternalFrame/licencia.java</file>
             <file>file:/C:/Users/USUARIO%201/Documents/NetBeansProjects/InventarioConnector/src/Vista/InicioSesion.java</file>
-            <file>file:/C:/Users/USUARIO%201/Documents/NetBeansProjects/InventarioConnector/src/Vista/InternalFrame/Inventario.java</file>
-            <file>file:/C:/Users/USUARIO%201/Documents/NetBeansProjects/InventarioConnector/src/emergente/inventario/infoInventario.java</file>
-            <file>file:/C:/Users/USUARIO%201/Documents/NetBeansProjects/InventarioConnector/src/emergente/inventario/AgregarArticulo.java</file>
-            <file>file:/C:/Users/USUARIO%201/Documents/NetBeansProjects/InventarioConnector/src/Vista/InternalFrame/Requisiciones.java</file>
+            <file>file:/C:/Users/USUARIO%201/Documents/NetBeansProjects/InventarioConnector/src/Controlador/WhatsAppMessageSimple.java</file>
+            <file>file:/C:/Users/USUARIO%201/Documents/NetBeansProjects/InventarioConnector/src/emergente/licencia/Informacion.java</file>
+            <file>file:/C:/Users/USUARIO%201/Documents/NetBeansProjects/InventarioConnector/src/emergente/licencia/IngresarNumero.java</file>
+            <file>file:/C:/Users/USUARIO%201/Documents/NetBeansProjects/InventarioConnector/src/Vista/InternalFrame/AñadirEmpleado.java</file>
             <file>file:/C:/Users/USUARIO%201/Documents/NetBeansProjects/InventarioConnector/src/Vista/InternalFrame/Almacen.java</file>
+            <file>file:/C:/Users/USUARIO%201/Documents/NetBeansProjects/InventarioConnector/src/Controlador/MensajeriaWhatsapp.java</file>
         </group>
     </open-files>
 </project-private>

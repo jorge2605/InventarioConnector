@@ -424,14 +424,25 @@ public class AgregarArticulo extends javax.swing.JDialog implements FocusListene
                     String sql2 = "insert into inventario (codigo, descripcion, cantidad, UM, proveedor, ubicacion, maximos, minimos) values (?,?,?,?,?,?,?,?)";
                     PreparedStatement pst = con.prepareStatement(sql2);
                     
+                    double maximos = 0;
+                    double minimos = 0;
+                    
+                    if(!txtMaximos.getText().equals("")){
+                        maximos = Double.parseDouble(txtMaximos.getText());
+                    }
+                    
+                    if(!txtMinimos.getText().equals("")){
+                        minimos = Double.parseDouble(txtMinimos.getText());
+                    }
+                    
                     pst.setString(1, txtCodigo.getText());
                     pst.setString(2, txtDescripcion.getText());
                     pst.setString(3, txtCantidad.getText());
                     pst.setString(4, txtUM.getText());
                     pst.setString(5, txtProveedor.getText());
                     pst.setString(6, txtUbicacion.getText());
-                    pst.setString(7, txtMaximos.getText());
-                    pst.setString(8, txtMinimos.getText());
+                    pst.setDouble(7, maximos);
+                    pst.setDouble(8, minimos);
                     
                     int n = pst.executeUpdate();
                     

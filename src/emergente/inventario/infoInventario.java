@@ -19,7 +19,6 @@ import javax.swing.text.DocumentFilter;
 
 public class infoInventario extends javax.swing.JDialog {
 
-    Stack<String> proyectos;
     TextAutoCompleter au;
     public final int RESTA = 1;
     public final int SUMA = 2;
@@ -111,11 +110,9 @@ public class infoInventario extends javax.swing.JDialog {
         return guardado;
     }
     
-    public infoInventario(java.awt.Frame parent, boolean modal, Stack proyectos) {
+    public infoInventario(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        this.proyectos = proyectos;
-//        addProyectos();
         ((AbstractDocument) txtCantRetirar.getDocument()).setDocumentFilter(new infoInventario.DoubleFilter());
     }
 
@@ -503,9 +500,7 @@ public class infoInventario extends javax.swing.JDialog {
     }//GEN-LAST:event_txtProyectoFocusLost
 
     private void txtProyectoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtProyectoActionPerformed
-        if(proyectos.contains(txtProyecto.getText())){
-            txtProyecto.setEnabled(false);
-        }
+        
     }//GEN-LAST:event_txtProyectoActionPerformed
 
     private void txtProyectoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtProyectoMouseClicked
@@ -642,7 +637,7 @@ public class infoInventario extends javax.swing.JDialog {
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                infoInventario dialog = new infoInventario(new javax.swing.JFrame(), true,null);
+                infoInventario dialog = new infoInventario(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {

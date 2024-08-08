@@ -1,7 +1,8 @@
 package Vista.InternalFrame;
 
 import Conexiones.Conexion;
-import Controlador.MensajeriaWhatsapp;
+import Modelo.Token;
+import Modelo.sendMail;
 import emergente.almacen.altaArticulos;
 import java.awt.Color;
 import java.awt.Font;
@@ -12,13 +13,21 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Stack;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
 
 public class Almacen extends javax.swing.JInternalFrame {
 
     public String numEmpleado;
+    public Stack<String> material;
+    public Stack<String> cant;
+    public Stack<String> cantR;
+    public boolean band = false;
     
     public final void limpiarTabla(){
         Tabla1.setModel(new javax.swing.table.DefaultTableModel(
@@ -121,7 +130,7 @@ public class Almacen extends javax.swing.JInternalFrame {
         scroll.getViewport().setBackground(new Color(255,255,255));
     }
     
-    public String getNumero(String requi){
+    public String getCorreo(String requi){
         String numero = "";
         try{
             Connection con;
@@ -138,7 +147,7 @@ public class Almacen extends javax.swing.JInternalFrame {
             ResultSet rs2 = st2.executeQuery(sql2);
             
             while(rs2.next()){
-                numero = rs2.getString("telefono");
+                numero = rs2.getString("correo");
             }
             
             return numero;
@@ -148,8 +157,7 @@ public class Almacen extends javax.swing.JInternalFrame {
         return numero;
     }
     
-    public String getToken(){
-        String token = "";
+    public final void enviarCorreo(){
         try{
             Connection con;
             Conexion con1 = new Conexion();
@@ -157,20 +165,39 @@ public class Almacen extends javax.swing.JInternalFrame {
             Statement st = con.createStatement();
             String sql = "select * from licencia";
             ResultSet rs = st.executeQuery(sql);
+            String licencia = null;
+            String key = null;
+            String iv = null;
             while(rs.next()){
-                token = rs.getString("accessToken");
+                licencia = rs.getString("accessToken");
+                key = rs.getString("llave");
+                iv = rs.getString("iv");
             }
-            return token;
+            Token tok = new Token();
+            String decryptedMessage = tok.getUserPasswordByEmail(licencia, key, iv);
+            String fecha = decryptedMessage.substring(0, decryptedMessage.indexOf("@"));
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date d = sdf.parse(fecha);
+            Date hoy = new Date();
+            if(hoy.before(d)){
+                lblLicencia.setVisible(false);
+                band = true;
+            }else{
+                lblLicencia.setVisible(true);
+                band = false;
+            }
         }catch(SQLException e){
-            JOptionPane.showMessageDialog(this, "Error: " + e,"error",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Error: "+e,"Error",JOptionPane.ERROR_MESSAGE);
+        } catch (Exception ex) {
+            Logger.getLogger(Almacen.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return token;
     }
     
     public Almacen(String numEmpleado) {
         initComponents();
         this.numEmpleado = numEmpleado;
         limpiarTabla();
+        enviarCorreo();
         setTable(Tabla1, jScrollPane2);
         ((javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI()).setNorthPane(null);
     }
@@ -198,6 +225,7 @@ public class Almacen extends javax.swing.JInternalFrame {
         jPanel7 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         Tabla1 = new javax.swing.JTable();
+        lblLicencia = new javax.swing.JLabel();
 
         jMenuItem1.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         jMenuItem1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/Iconos/editar.png"))); // NOI18N
@@ -300,7 +328,14 @@ public class Almacen extends javax.swing.JInternalFrame {
         jLabel3.setForeground(new java.awt.Color(153, 153, 153));
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel3.setText("OC Selecionada");
+        jLabel3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel3MouseClicked(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.ipadx = 4;
         gridBagConstraints.ipady = 4;
@@ -312,7 +347,7 @@ public class Almacen extends javax.swing.JInternalFrame {
         lblOC.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblOC.setText("#");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.ipadx = 4;
@@ -365,6 +400,11 @@ public class Almacen extends javax.swing.JInternalFrame {
 
         jPanel7.add(jScrollPane2, java.awt.BorderLayout.CENTER);
 
+        lblLicencia.setFont(new java.awt.Font("Roboto", 1, 18)); // NOI18N
+        lblLicencia.setForeground(new java.awt.Color(204, 0, 0));
+        lblLicencia.setText("                Licencia de correo vencida");
+        jPanel7.add(lblLicencia, java.awt.BorderLayout.PAGE_END);
+
         jPanel5.add(jPanel7, java.awt.BorderLayout.CENTER);
 
         jPanel1.add(jPanel5, java.awt.BorderLayout.CENTER);
@@ -410,7 +450,7 @@ public class Almacen extends javax.swing.JInternalFrame {
             altaArticulos ver = new altaArticulos(f,true);
             ver.setLocationRelativeTo(f);
             int fila = Tabla1.getSelectedRow();
-            String requi = "";
+            String requi;
             ver.cantidad = Double.parseDouble(Tabla1.getValueAt(fila, 4).toString());
             ver.cantidadRecibida = Double.parseDouble(Tabla1.getValueAt(fila, 8).toString());
             ver.txtID.setText(Tabla1.getValueAt(fila, 0).toString());
@@ -423,13 +463,18 @@ public class Almacen extends javax.swing.JInternalFrame {
             ver.oc = lblOC.getText();
             try{ver.txtNotas.setText(Tabla1.getValueAt(fila, 9).toString());}catch(Exception e){ver.txtNotas.setText("");}
             try{ver.txtUbicacion.setText(Tabla1.getValueAt(fila, 10).toString());}catch(Exception e){ver.txtUbicacion.setText("");}
-            boolean band = ver.getGuardado();
+            material = new Stack<>();
+            cant = new Stack<>();
+            cantR = new Stack<>();
+            boolean band = ver.getGuardado(this);
             if(band) {
+                String correo = getCorreo(requi);
+                if(band){
+                    sendMail send = new sendMail();
+                    send.sendAlmacen(correo, "santacruz.leonel.1h@hotmail.com", "Recibo de material", material, cant, cantR, f, requi, lblOC.getText());
+                }
                 limpiarTabla();
                 verRequisiciones();
-                MensajeriaWhatsapp mensaje = new MensajeriaWhatsapp();
-                String numero = getNumero(requi);
-                mensaje.sendMessage(numero, lblOC.getText(), requi, getToken());
             }
         }
     }//GEN-LAST:event_Tabla1MouseClicked
@@ -438,6 +483,9 @@ public class Almacen extends javax.swing.JInternalFrame {
         if(Tabla1.getSelectedRows().length > 0){
             boolean band, band2 = false;
             String requi = "";
+            material = new Stack<>();
+            cant = new Stack<>();
+            cantR = new Stack<>();
             for (int i = 0; i < Tabla1.getSelectedRows().length; i++) {
                 JFrame f = (JFrame) JOptionPane.getFrameForComponent(this);
                 altaArticulos ver = new altaArticulos(f,true);
@@ -454,22 +502,29 @@ public class Almacen extends javax.swing.JInternalFrame {
                 ver.almacen = this;
                 try{ver.txtNotas.setText(Tabla1.getValueAt(fila, 9).toString());}catch(Exception e){ver.txtNotas.setText("");}
                 try{ver.txtUbicacion.setText(Tabla1.getValueAt(fila, 10).toString());}catch(Exception e){ver.txtUbicacion.setText("");}
-                band = ver.getGuardado();
+                band = ver.getGuardado(this);
                 if(band != false){
                     band2 = band;
                 }
             }
             if(band2){
+                String correo = getCorreo(requi);
+                if(this.band){
+                    sendMail send = new sendMail();
+                    JFrame f = (JFrame) JOptionPane.getFrameForComponent(this);
+                    send.sendAlmacen(correo, "santacruz.leonel.1h@hotmail.com", "Recibo de material", material, cant, cantR, f, requi, lblOC.getText());
+                }
                 limpiarTabla();
                 verRequisiciones();
-                MensajeriaWhatsapp mensaje = new MensajeriaWhatsapp();
-                String numero = getNumero(requi);
-                mensaje.sendMessage(numero, lblOC.getText(), requi, getToken());
             }
         }else{
             JOptionPane.showMessageDialog(this, "Debes seleccionar 1 o mas articulos","Advertencia",JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
+        
+    }//GEN-LAST:event_jLabel3MouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -488,6 +543,7 @@ public class Almacen extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel lblLicencia;
     private javax.swing.JLabel lblOC;
     private javax.swing.JLabel lblX;
     private javax.swing.JTextField txtOC;

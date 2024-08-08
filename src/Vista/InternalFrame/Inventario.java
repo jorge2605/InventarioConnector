@@ -3,6 +3,7 @@ package Vista.InternalFrame;
 import Conexiones.Conexion;
 import com.mxrck.autocompleter.TextAutoCompleter;
 import emergente.inventario.AgregarArticulo;
+import emergente.inventario.MaximosMinimos;
 import emergente.inventario.infoInventario;
 import java.awt.Color;
 import java.awt.Component;
@@ -856,7 +857,10 @@ public class Inventario extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void btnAgregar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregar1ActionPerformed
-        // TODO add your handling code here:
+        JFrame f = (JFrame) JOptionPane.getFrameForComponent(this);
+        MaximosMinimos max = new MaximosMinimos(f, true);
+        max.setLocationRelativeTo(f);
+        max.setVisible(true);
     }//GEN-LAST:event_btnAgregar1ActionPerformed
 
 
@@ -962,7 +966,7 @@ class myeditor extends AbstractCellEditor implements TableCellEditor, ActionList
 
     public void actionPerformed(ActionEvent e) {
         JFrame f = (JFrame) JOptionPane.getFrameForComponent(cxp);
-        infoInventario info = new infoInventario(f,true,null);
+        infoInventario info = new infoInventario(f,true);
         info.setLocationRelativeTo(cxp);
         boolean puede = true;
         switch (seleccionado) {

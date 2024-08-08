@@ -57,9 +57,9 @@ public class InicioSesion extends javax.swing.JFrame {
                         Inicio inicio = new Inicio();
                         inicio.numeroEmpleado = employee;
                         inicio.nombreEmpleado = name + " " + lastname;
-                        inicio.lblNombre.setText("<html>" +
-                                            "<div style=\"width: 120px; text-align: center;\">\n" +
-                                            "<p>" + name.toUpperCase() + " " + lastname.toUpperCase() + "</p>\n" +
+                        inicio.lblNombre.setText("""
+                                                 <html><div style="width: 120px; text-align: center;">
+                                                 <p>""" + name.toUpperCase() + " " + lastname.toUpperCase() + "</p>\n" +
                                             "<p style=\"color: rgb(54, 117, 45); padding: 10px 0 0 0\">" + role + "</p>");
                         if(!requisiciones){
                             inicio.pnlRequisiciones.setVisible(false);

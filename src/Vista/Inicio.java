@@ -8,6 +8,7 @@ import Vista.InternalFrame.Requisiciones;
 import Vista.InternalFrame.VerRequisiciones;
 import Vista.InternalFrame.licencia;
 import java.awt.Color;
+import java.awt.EventQueue;
 import java.beans.PropertyVetoException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
