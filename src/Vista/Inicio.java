@@ -1,5 +1,6 @@
 package Vista;
 
+import Vista.InternalFrame.Admin;
 import Vista.InternalFrame.Almacen;
 import Vista.InternalFrame.AñadirEmpleado;
 import Vista.InternalFrame.Inventario;
@@ -27,6 +28,7 @@ public class Inicio extends javax.swing.JFrame {
     Inventario inventario;
     Reportes reportes;
     licencia licencia;
+    Admin admin;
     JInternalFrame frame;
     String numeroEmpleado;
     String nombreEmpleado;
@@ -47,6 +49,8 @@ public class Inicio extends javax.swing.JFrame {
         btnReportes.setForeground(new Color(54,54,54));
         pnlLicencia.setBackground(Color.white);
         btnLicencia.setForeground(new Color(54,54,54));
+        pnlAdmin.setBackground(Color.white);
+        btnAdmin.setForeground(new Color(54,54,54));
         panel.setBackground(new Color(255,222,0));
         boton.setForeground(Color.gray);
     }
@@ -66,6 +70,8 @@ public class Inicio extends javax.swing.JFrame {
         btnReportes.setForeground(new Color(54,54,54));
         pnlLicencia.setBackground(Color.white);
         btnLicencia.setForeground(new Color(54,54,54));
+        pnlAdmin.setBackground(Color.white);
+        btnAdmin.setForeground(new Color(54,54,54));
     }
     
     public void cerrarFrame(){
@@ -106,6 +112,8 @@ public class Inicio extends javax.swing.JFrame {
         btnReportes = new javax.swing.JButton();
         pnlLicencia = new javax.swing.JPanel();
         btnLicencia = new javax.swing.JButton();
+        pnlAdmin = new javax.swing.JPanel();
+        btnAdmin = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jDesktopPane1 = new javax.swing.JDesktopPane();
         jLabel1 = new javax.swing.JLabel();
@@ -451,6 +459,41 @@ public class Inicio extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 0);
         jPanel1.add(pnlLicencia, gridBagConstraints);
 
+        pnlAdmin.setBackground(new java.awt.Color(255, 255, 255));
+        pnlAdmin.setLayout(new java.awt.BorderLayout());
+
+        btnAdmin.setBackground(new java.awt.Color(255, 255, 255));
+        btnAdmin.setFont(new java.awt.Font("Roboto", 1, 12)); // NOI18N
+        btnAdmin.setText("Admin");
+        btnAdmin.setBorder(null);
+        btnAdmin.setBorderPainted(false);
+        btnAdmin.setContentAreaFilled(false);
+        btnAdmin.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAdmin.setFocusPainted(false);
+        btnAdmin.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnAdminMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnAdminMouseExited(evt);
+            }
+        });
+        btnAdmin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAdminActionPerformed(evt);
+            }
+        });
+        pnlAdmin.add(btnAdmin, java.awt.BorderLayout.CENTER);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 9;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.ipadx = 18;
+        gridBagConstraints.ipady = 18;
+        gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 0);
+        jPanel1.add(pnlAdmin, gridBagConstraints);
+
         jPanel2.add(jPanel1, java.awt.BorderLayout.LINE_START);
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
@@ -717,6 +760,35 @@ public class Inicio extends javax.swing.JFrame {
         setWhite(pnlLicencia, btnLicencia);
     }//GEN-LAST:event_btnLicenciaActionPerformed
 
+    private void btnAdminMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAdminMouseEntered
+        pnlAdmin.setBackground(new Color(255, 222, 0));
+        btnAdmin.setForeground(Color.gray);
+    }//GEN-LAST:event_btnAdminMouseEntered
+
+    private void btnAdminMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAdminMouseExited
+        if(seleccionado != 8){
+            pnlAdmin.setBackground(Color.white);
+            btnAdmin.setForeground(Color.black);
+        }
+    }//GEN-LAST:event_btnAdminMouseExited
+
+    private void btnAdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdminActionPerformed
+        cerrarFrame();
+        seleccionado = 8;
+        admin = new Admin( numeroEmpleado, nombreEmpleado);
+        jDesktopPane1.add(admin);
+        admin.toFront();
+        admin.setLocation(jDesktopPane1.getWidth() / 2 - admin.getWidth() / 2, jDesktopPane1.getHeight() / 2 - admin.getHeight() / 2);
+        try{
+            admin.setMaximum(true);
+        }catch(PropertyVetoException e){
+            Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE,null,e);
+        }
+        admin.setVisible(true);
+        frame = admin;
+        setWhite(pnlAdmin, btnAdmin);
+    }//GEN-LAST:event_btnAdminActionPerformed
+
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -726,6 +798,7 @@ public class Inicio extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    public javax.swing.JButton btnAdmin;
     public javax.swing.JButton btnAlmacen;
     public javax.swing.JButton btnCerrar;
     public javax.swing.JButton btnCerrar1;
@@ -741,6 +814,7 @@ public class Inicio extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     public javax.swing.JLabel lblNombre;
+    public javax.swing.JPanel pnlAdmin;
     public javax.swing.JPanel pnlAlmacen;
     public javax.swing.JPanel pnlCerrar;
     public javax.swing.JPanel pnlCerrar1;

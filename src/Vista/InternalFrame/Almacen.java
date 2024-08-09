@@ -27,7 +27,37 @@ public class Almacen extends javax.swing.JInternalFrame {
     public Stack<String> material;
     public Stack<String> cant;
     public Stack<String> cantR;
+    public Stack<String> copias;
     public boolean band = false;
+    
+    public final void getCopias(){
+        try{
+            Connection con;
+            Conexion con1 = new Conexion();
+            con = con1.getConnection();
+            String sql = "select * from correo";
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            copias = new Stack<>();
+            while(rs.next()){
+                copias.push(rs.getString("correo"));
+            }
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(this, "Error: "+e,"Error",JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    public String getCopia(){
+        String cop = "";
+        for (int i = 0; i < copias.size(); i++) {
+            if(i == 0){
+                cop += copias.get(i);
+            }else{
+                cop += "," + copias.get(i);
+            }
+        }
+        return cop;
+    }
     
     public final void limpiarTabla(){
         Tabla1.setModel(new javax.swing.table.DefaultTableModel(
@@ -198,6 +228,7 @@ public class Almacen extends javax.swing.JInternalFrame {
         this.numEmpleado = numEmpleado;
         limpiarTabla();
         enviarCorreo();
+        getCopias();
         setTable(Tabla1, jScrollPane2);
         ((javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI()).setNorthPane(null);
     }
@@ -471,7 +502,7 @@ public class Almacen extends javax.swing.JInternalFrame {
                 String correo = getCorreo(requi);
                 if(band){
                     sendMail send = new sendMail();
-                    send.sendAlmacen(correo, "santacruz.leonel.1h@hotmail.com", "Recibo de material", material, cant, cantR, f, requi, lblOC.getText());
+                    send.sendAlmacen(correo, getCopia(), "Recibo de material", material, cant, cantR, f, requi, lblOC.getText());
                 }
                 limpiarTabla();
                 verRequisiciones();
@@ -512,7 +543,7 @@ public class Almacen extends javax.swing.JInternalFrame {
                 if(this.band){
                     sendMail send = new sendMail();
                     JFrame f = (JFrame) JOptionPane.getFrameForComponent(this);
-                    send.sendAlmacen(correo, "santacruz.leonel.1h@hotmail.com", "Recibo de material", material, cant, cantR, f, requi, lblOC.getText());
+                    send.sendAlmacen(correo, getCopia(), "Recibo de material", material, cant, cantR, f, requi, lblOC.getText());
                 }
                 limpiarTabla();
                 verRequisiciones();

@@ -7,9 +7,14 @@ import emergente.inventario.MaximosMinimos;
 import emergente.inventario.infoInventario;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Desktop;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import javax.swing.AbstractCellEditor;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -28,6 +33,26 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import static org.apache.poi.ss.usermodel.FillPatternType.SOLID_FOREGROUND;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.ss.util.CellUtil;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class Inventario extends javax.swing.JInternalFrame {
 
@@ -62,11 +87,11 @@ public class Inventario extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "CODIGO", "DESCRIPCION", "CANTIDAD", "PROVEEDOR", "UBICACION", "SAL.", "ENT.", "ACT."
+                "CODIGO", "DESCRIPCION", "CANTIDAD", "PROVEEDOR", "UBICACION", "MAXIMOS", "MINIMOS", "SAL.", "ENT.", "ACT."
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false,true,true,true
+                false, false, false, false, false, false, false, true, true, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -75,15 +100,15 @@ public class Inventario extends javax.swing.JInternalFrame {
         });
         
         TableColumn col;
-        col = Tabla1.getColumnModel().getColumn(5);
+        col = Tabla1.getColumnModel().getColumn(7);
         col.setCellEditor(new myeditor(Tabla1,this,1));
         col.setCellRenderer(new renderer(false,1));
         
-        col = Tabla1.getColumnModel().getColumn(6);
+        col = Tabla1.getColumnModel().getColumn(8);
         col.setCellEditor(new myeditor(Tabla1,this,2));
         col.setCellRenderer(new renderer(false,2));
         
-        col = Tabla1.getColumnModel().getColumn(7);
+        col = Tabla1.getColumnModel().getColumn(9);
         col.setCellEditor(new myeditor(Tabla1,this,3));
         col.setCellRenderer(new renderer(false,3));
         
@@ -100,15 +125,15 @@ public class Inventario extends javax.swing.JInternalFrame {
         if (Tabla1.getColumnModel().getColumnCount() > 0) {
             Tabla1.getColumnModel().getColumn(1).setMinWidth(300);
             Tabla1.getColumnModel().getColumn(1).setPreferredWidth(600);
-            Tabla1.getColumnModel().getColumn(5).setMinWidth(50);
-            Tabla1.getColumnModel().getColumn(5).setPreferredWidth(50);
-            Tabla1.getColumnModel().getColumn(5).setMaxWidth(50);
-            Tabla1.getColumnModel().getColumn(6).setMinWidth(50);
-            Tabla1.getColumnModel().getColumn(6).setPreferredWidth(50);
-            Tabla1.getColumnModel().getColumn(6).setMaxWidth(50);
             Tabla1.getColumnModel().getColumn(7).setMinWidth(50);
             Tabla1.getColumnModel().getColumn(7).setPreferredWidth(50);
             Tabla1.getColumnModel().getColumn(7).setMaxWidth(50);
+            Tabla1.getColumnModel().getColumn(8).setMinWidth(50);
+            Tabla1.getColumnModel().getColumn(8).setPreferredWidth(50);
+            Tabla1.getColumnModel().getColumn(8).setMaxWidth(50);
+            Tabla1.getColumnModel().getColumn(9).setMinWidth(50);
+            Tabla1.getColumnModel().getColumn(9).setPreferredWidth(50);
+            Tabla1.getColumnModel().getColumn(9).setMaxWidth(50);
         }
     }
     
@@ -170,6 +195,8 @@ public class Inventario extends javax.swing.JInternalFrame {
                 datos[2] = rs.getString("cantidad");
                 datos[3] = rs.getString("proveedor");
                 datos[4] = rs.getString("ubicacion");
+                datos[5] = rs.getString("maximos");
+                datos[6] = rs.getString("minimos");
                 miModelo.addRow(datos);
             }
         }catch(SQLException e){
@@ -251,6 +278,153 @@ public class Inventario extends javax.swing.JInternalFrame {
         }
     }
     
+    public void exportarExcel(JTable TablaDeDatos1, String tit) {
+        if(TablaDeDatos1.getRowCount() <= 0){
+            JOptionPane.showMessageDialog(this, "Existir al menos un articulo para generar Excel","Advertencia",JOptionPane.WARNING_MESSAGE);
+        }else{
+            Workbook book;
+            int columna = TablaDeDatos1.getColumnCount();
+            try {
+                JFileChooser fc = new JFileChooser();
+                File archivo = null;
+                fc.setFileFilter(new FileNameExtensionFilter("EXCEL (*.xlsx)", "xlsx"));
+                int n = fc.showSaveDialog(this);
+
+                if (n == JFileChooser.APPROVE_OPTION) {
+                    archivo = fc.getSelectedFile();
+                    String a = "" + archivo;
+                    if (a.endsWith("xls")) {
+                        book = new HSSFWorkbook();
+                    } else {
+                        book = new XSSFWorkbook();
+                        a = archivo + ".xlsx";
+                    }
+
+                    Sheet hoja = book.createSheet("Reporte de " + tit);
+                    Row fila = hoja.createRow(2);
+                    Cell col = fila.createCell(2);
+
+                    //-------------------------------ESTILOS
+                    org.apache.poi.ss.usermodel.Font font = book.createFont();
+                    CellStyle estilo1 = book.createCellStyle();
+
+                    org.apache.poi.ss.usermodel.Font font3 = book.createFont();
+                    CellStyle estilo3 = book.createCellStyle();
+
+                    font.setBold(true);
+                    font.setColor(IndexedColors.BLACK.getIndex());
+                    font.setFontHeightInPoints((short) 12);
+                    estilo1.setFont(font);
+
+                    estilo1.setAlignment(HorizontalAlignment.LEFT);
+
+                    font3.setBold(false);
+                    font3.setColor(IndexedColors.BLACK.getIndex());
+                    font3.setFontHeightInPoints((short) 15);
+                    estilo3.setFont(font3);
+
+                    estilo3.setAlignment(HorizontalAlignment.CENTER);
+                    estilo3.setWrapText(true);
+
+                    //--------------------------------------
+                    //        hoja.setColumnWidth(2, 5000);
+                    //---------------------------------------
+                    hoja.setColumnWidth(2, 4000);
+                    hoja.setColumnWidth(3, 6500);
+                    hoja.setColumnWidth(4, 6500);
+                    hoja.setColumnWidth(5, 8200);
+                    hoja.setColumnWidth(7, 8200);
+                    hoja.setColumnWidth(13, 8200);
+
+                    org.apache.poi.ss.usermodel.Font font1 = book.createFont();
+                    CellStyle style = book.createCellStyle();
+
+                    font1.setBold(true);
+                    font1.setColor(IndexedColors.WHITE.getIndex());
+                    font1.setFontHeightInPoints((short) 16);
+                    style.setFont(font1);
+
+                    style.setFillBackgroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+                    style.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+                    style.setFillPattern(SOLID_FOREGROUND);
+                    style.setVerticalAlignment(VerticalAlignment.BOTTOM);
+                    style.setAlignment(HorizontalAlignment.CENTER);
+                    style.setWrapText(true);
+
+                    hoja.addMergedRegion(new CellRangeAddress(
+                            2,
+                            2,
+                            2,
+                            columna + 1
+                    ));
+
+                    Map<String, Object> properties = new HashMap<String, Object>();
+                    properties.put(CellUtil.BORDER_TOP, BorderStyle.MEDIUM);
+                    properties.put(CellUtil.BORDER_BOTTOM, BorderStyle.MEDIUM);
+                    properties.put(CellUtil.BORDER_LEFT, BorderStyle.MEDIUM);
+                    properties.put(CellUtil.BORDER_RIGHT, BorderStyle.MEDIUM);
+
+                    properties.put(CellUtil.TOP_BORDER_COLOR, IndexedColors.BLACK.getIndex());
+                    properties.put(CellUtil.BOTTOM_BORDER_COLOR, IndexedColors.BLACK.getIndex());
+                    properties.put(CellUtil.LEFT_BORDER_COLOR, IndexedColors.BLACK.getIndex());
+                    properties.put(CellUtil.RIGHT_BORDER_COLOR, IndexedColors.BLACK.getIndex());
+
+                    col.setCellStyle(style);
+                    col.setCellValue("Reporte de " + tit);
+
+                    for (int i = -1; i < TablaDeDatos1.getRowCount(); i++) {
+                        Row fila10 = hoja.createRow(i + 7);
+                        for (int j = 0; j < columna; j++) {
+                            Cell celda = fila10.createCell(j + 2);
+                            if (i == -1 && (j >= 0 && j <= columna + 1)) {
+                                CellStyle s = book.createCellStyle();
+                                org.apache.poi.ss.usermodel.Font f = book.createFont();
+                                f.setBold(true);
+                                f.setColor(IndexedColors.WHITE.getIndex());
+                                s.setFont(f);
+                                s.setFillForegroundColor(IndexedColors.GREY_50_PERCENT.getIndex());
+                                s.setFillPattern(SOLID_FOREGROUND);
+                                celda.setCellStyle(s);
+                            }
+                            if (i > -1 && (j > -1 && j <= columna) && (i % 2 == 0)) {
+                                CellStyle s = book.createCellStyle();
+                                s.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+                                s.setFillPattern(SOLID_FOREGROUND);
+                                celda.setCellStyle(s);
+                            }
+
+                            if (i == -1) {
+                                celda.setCellValue(String.valueOf(TablaDeDatos1.getColumnName(j)));
+                                //                        CellUtil.setCellStyleProperties(celda, properties);
+                            } else {
+                                if (j == 3) {
+                                    CellStyle ss = book.createCellStyle();
+                                    ss.setWrapText(true);
+
+                                    if (i % 2 == 0) {
+                                        ss.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+                                        ss.setFillPattern(SOLID_FOREGROUND);
+
+                                    }
+                                    celda.setCellStyle(ss);
+                                }
+                                celda.setCellValue(String.valueOf(TablaDeDatos1.getValueAt(i, j)));
+                            }
+                            File ad = new File(a);
+                            book.write(new FileOutputStream(a));
+                        }
+                    }
+                    book.close();
+                    Desktop.getDesktop().open(new File(a));
+                }
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(Reportes.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(Reportes.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
     public Inventario(String numEmpleado, String nombre) {
         initComponents();
         this.numEmpleado = numEmpleado;
@@ -288,6 +462,10 @@ public class Inventario extends javax.swing.JInternalFrame {
         jPanel9 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         Tabla1 = new javax.swing.JTable();
+        jPanel13 = new javax.swing.JPanel();
+        btnAgregar = new Componentes.Boton();
+        btnAgregar1 = new Componentes.Boton();
+        btnExcel = new Componentes.Boton();
         panelCard = new javax.swing.JPanel();
         Salida = new javax.swing.JPanel();
         jPanel10 = new javax.swing.JPanel();
@@ -299,7 +477,6 @@ public class Inventario extends javax.swing.JInternalFrame {
         txtRequisitor = new javax.swing.JTextField();
         jLabel15 = new javax.swing.JLabel();
         jPanel8 = new javax.swing.JPanel();
-        btnAgregar = new Componentes.Boton();
         jPanel11 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         txtProyecto = new javax.swing.JTextField();
@@ -308,7 +485,6 @@ public class Inventario extends javax.swing.JInternalFrame {
         jLabel18 = new javax.swing.JLabel();
         txtDesc = new javax.swing.JTextField();
         jPanel12 = new javax.swing.JPanel();
-        btnAgregar1 = new Componentes.Boton();
 
         setBorder(null);
 
@@ -483,15 +659,15 @@ public class Inventario extends javax.swing.JInternalFrame {
 
         Tabla1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "CODIGO", "DESCRIPCION", "CANTIDAD", "PROVEEDOR", "UBICACION", "Salida", "Entrada", "Act."
+                "CODIGO", "DESCRIPCION", "CANTIDAD", "PROVEEDOR", "UBICACION", "MAXIMOS", "MINIMOS", "Salida", "Entrada", "Act."
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, true, true, true
+                false, false, false, false, false, false, false, true, true, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -501,6 +677,53 @@ public class Inventario extends javax.swing.JInternalFrame {
         jScrollPane1.setViewportView(Tabla1);
 
         jPanel9.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+
+        jPanel13.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel13.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 30, 5));
+
+        btnAgregar.setBackground(new java.awt.Color(255, 255, 255));
+        btnAgregar.setForeground(new java.awt.Color(0, 102, 255));
+        btnAgregar.setText("Agregar Material");
+        btnAgregar.setBorderColor(new java.awt.Color(0, 102, 255));
+        btnAgregar.setBorderColorSelected(new java.awt.Color(0, 51, 153));
+        btnAgregar.setColor(new java.awt.Color(0, 102, 255));
+        btnAgregar.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarActionPerformed(evt);
+            }
+        });
+        jPanel13.add(btnAgregar);
+
+        btnAgregar1.setBackground(new java.awt.Color(255, 255, 255));
+        btnAgregar1.setForeground(new java.awt.Color(204, 153, 255));
+        btnAgregar1.setText("Maximos y minimos");
+        btnAgregar1.setBorderColor(new java.awt.Color(204, 153, 255));
+        btnAgregar1.setBorderColorSelected(new java.awt.Color(153, 0, 255));
+        btnAgregar1.setColor(new java.awt.Color(204, 153, 255));
+        btnAgregar1.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
+        btnAgregar1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregar1ActionPerformed(evt);
+            }
+        });
+        jPanel13.add(btnAgregar1);
+
+        btnExcel.setBackground(new java.awt.Color(255, 255, 255));
+        btnExcel.setForeground(new java.awt.Color(0, 153, 0));
+        btnExcel.setText("Exportar Excel");
+        btnExcel.setBorderColor(new java.awt.Color(0, 153, 0));
+        btnExcel.setBorderColorSelected(new java.awt.Color(0, 102, 0));
+        btnExcel.setColor(new java.awt.Color(0, 153, 0));
+        btnExcel.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
+        btnExcel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcelActionPerformed(evt);
+            }
+        });
+        jPanel13.add(btnExcel);
+
+        jPanel9.add(jPanel13, java.awt.BorderLayout.PAGE_START);
 
         jPanel7.add(jPanel9, java.awt.BorderLayout.CENTER);
 
@@ -568,21 +791,6 @@ public class Inventario extends javax.swing.JInternalFrame {
         jPanel10.add(jLabel15);
 
         jPanel8.setBackground(new java.awt.Color(255, 255, 255));
-
-        btnAgregar.setBackground(new java.awt.Color(255, 255, 255));
-        btnAgregar.setForeground(new java.awt.Color(0, 102, 255));
-        btnAgregar.setText("Agregar Material");
-        btnAgregar.setBorderColor(new java.awt.Color(0, 102, 255));
-        btnAgregar.setBorderColorSelected(new java.awt.Color(0, 51, 153));
-        btnAgregar.setColor(new java.awt.Color(0, 102, 255));
-        btnAgregar.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAgregarActionPerformed(evt);
-            }
-        });
-        jPanel8.add(btnAgregar);
-
         jPanel10.add(jPanel8);
 
         Salida.add(jPanel10);
@@ -644,21 +852,6 @@ public class Inventario extends javax.swing.JInternalFrame {
         jPanel11.add(txtDesc);
 
         jPanel12.setBackground(new java.awt.Color(255, 255, 255));
-
-        btnAgregar1.setBackground(new java.awt.Color(255, 255, 255));
-        btnAgregar1.setForeground(new java.awt.Color(204, 153, 255));
-        btnAgregar1.setText("Maximos y minimos");
-        btnAgregar1.setBorderColor(new java.awt.Color(204, 153, 255));
-        btnAgregar1.setBorderColorSelected(new java.awt.Color(153, 0, 255));
-        btnAgregar1.setColor(new java.awt.Color(204, 153, 255));
-        btnAgregar1.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        btnAgregar1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAgregar1ActionPerformed(evt);
-            }
-        });
-        jPanel12.add(btnAgregar1);
-
         jPanel11.add(jPanel12);
 
         Salida.add(jPanel11);
@@ -863,6 +1056,10 @@ public class Inventario extends javax.swing.JInternalFrame {
         max.setVisible(true);
     }//GEN-LAST:event_btnAgregar1ActionPerformed
 
+    private void btnExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcelActionPerformed
+        exportarExcel(Tabla1, "Inventario");
+    }//GEN-LAST:event_btnExcelActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel PanelX;
@@ -872,6 +1069,7 @@ public class Inventario extends javax.swing.JInternalFrame {
     private Componentes.Boton btnAgregar;
     private Componentes.Boton btnAgregar1;
     private javax.swing.JButton btnEntrada;
+    private Componentes.Boton btnExcel;
     private javax.swing.JButton btnInicio;
     private javax.swing.JButton btnSalida;
     private javax.swing.JLabel jLabel1;
@@ -886,6 +1084,7 @@ public class Inventario extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel11;
     private javax.swing.JPanel jPanel12;
+    private javax.swing.JPanel jPanel13;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;

@@ -81,6 +81,7 @@ public class InicioSesion extends javax.swing.JFrame {
                         if(!role.equals("Admin")){
                             inicio.pnlLicencia.setVisible(false);
                             inicio.pnlReportes.setVisible(false);
+                            inicio.pnlAdmin.setVisible(false);
                         }
                         inicio.setVisible(true);
                         this.dispose();
