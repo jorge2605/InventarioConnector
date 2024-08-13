@@ -293,151 +293,154 @@ public class Reportes extends javax.swing.JInternalFrame {
     }
 
     public void exportarExcel(JTable TablaDeDatos1, String tit) {
-        if(fecha1.getDatoFecha() == null){
-            JOptionPane.showMessageDialog(this, "Debes seleccionar fecha de inicio","Advertencia",JOptionPane.WARNING_MESSAGE);
-        }else if(fecha2.getDatoFecha() == null){
-            JOptionPane.showMessageDialog(this, "Debes seleccionar fecha de termino","Advertencia",JOptionPane.WARNING_MESSAGE);
-        }else{
-            Workbook book;
-            int columna = TablaDeDatos1.getColumnCount();
-            try {
-                JFileChooser fc = new JFileChooser();
-                File archivo = null;
-                fc.setFileFilter(new FileNameExtensionFilter("EXCEL (*.xlsx)", "xlsx"));
-                int n = fc.showSaveDialog(this);
-
-                if (n == JFileChooser.APPROVE_OPTION) {
-                    archivo = fc.getSelectedFile();
-                    String a = "" + archivo;
-                    if (a.endsWith("xls")) {
-                        book = new HSSFWorkbook();
-                    } else {
-                        book = new XSSFWorkbook();
-                        a = archivo + ".xlsx";
-                    }
-
-                    Sheet hoja = book.createSheet("Reporte de " + tit);
-                    Row fila = hoja.createRow(2);
-                    Cell col = fila.createCell(2);
-
-                    //-------------------------------ESTILOS
-                    org.apache.poi.ss.usermodel.Font font = book.createFont();
-                    CellStyle estilo1 = book.createCellStyle();
-
-                    org.apache.poi.ss.usermodel.Font font3 = book.createFont();
-                    CellStyle estilo3 = book.createCellStyle();
-
-                    font.setBold(true);
-                    font.setColor(IndexedColors.BLACK.getIndex());
-                    font.setFontHeightInPoints((short) 12);
-                    estilo1.setFont(font);
-
-                    estilo1.setAlignment(HorizontalAlignment.LEFT);
-
-                    font3.setBold(false);
-                    font3.setColor(IndexedColors.BLACK.getIndex());
-                    font3.setFontHeightInPoints((short) 15);
-                    estilo3.setFont(font3);
-
-                    estilo3.setAlignment(HorizontalAlignment.CENTER);
-                    estilo3.setWrapText(true);
-
-                    //--------------------------------------
-                    //        hoja.setColumnWidth(2, 5000);
-                    //---------------------------------------
-                    hoja.setColumnWidth(2, 4000);
-                    hoja.setColumnWidth(3, 6500);
-                    hoja.setColumnWidth(4, 6500);
-                    hoja.setColumnWidth(5, 8200);
-                    hoja.setColumnWidth(7, 8200);
-                    hoja.setColumnWidth(13, 8200);
-
-                    org.apache.poi.ss.usermodel.Font font1 = book.createFont();
-                    CellStyle style = book.createCellStyle();
-
-                    font1.setBold(true);
-                    font1.setColor(IndexedColors.WHITE.getIndex());
-                    font1.setFontHeightInPoints((short) 16);
-                    style.setFont(font1);
-
-                    style.setFillBackgroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
-                    style.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
-                    style.setFillPattern(SOLID_FOREGROUND);
-                    style.setVerticalAlignment(VerticalAlignment.BOTTOM);
-                    style.setAlignment(HorizontalAlignment.CENTER);
-                    style.setWrapText(true);
-
-                    hoja.addMergedRegion(new CellRangeAddress(
-                            2,
-                            2,
-                            2,
-                            columna + 1
-                    ));
-
-                    Map<String, Object> properties = new HashMap<String, Object>();
-                    properties.put(CellUtil.BORDER_TOP, BorderStyle.MEDIUM);
-                    properties.put(CellUtil.BORDER_BOTTOM, BorderStyle.MEDIUM);
-                    properties.put(CellUtil.BORDER_LEFT, BorderStyle.MEDIUM);
-                    properties.put(CellUtil.BORDER_RIGHT, BorderStyle.MEDIUM);
-
-                    properties.put(CellUtil.TOP_BORDER_COLOR, IndexedColors.BLACK.getIndex());
-                    properties.put(CellUtil.BOTTOM_BORDER_COLOR, IndexedColors.BLACK.getIndex());
-                    properties.put(CellUtil.LEFT_BORDER_COLOR, IndexedColors.BLACK.getIndex());
-                    properties.put(CellUtil.RIGHT_BORDER_COLOR, IndexedColors.BLACK.getIndex());
-
-                    col.setCellStyle(style);
-                    col.setCellValue("Reporte de " + tit);
-
-                    for (int i = -1; i < TablaDeDatos1.getRowCount(); i++) {
-                        Row fila10 = hoja.createRow(i + 7);
-                        for (int j = 0; j < columna; j++) {
-                            Cell celda = fila10.createCell(j + 2);
-                            if (i == -1 && (j >= 0 && j <= columna + 1)) {
-                                CellStyle s = book.createCellStyle();
-                                org.apache.poi.ss.usermodel.Font f = book.createFont();
-                                f.setBold(true);
-                                f.setColor(IndexedColors.WHITE.getIndex());
-                                s.setFont(f);
-                                s.setFillForegroundColor(IndexedColors.GREY_50_PERCENT.getIndex());
-                                s.setFillPattern(SOLID_FOREGROUND);
-                                celda.setCellStyle(s);
-                            }
-                            if (i > -1 && (j > -1 && j <= columna) && (i % 2 == 0)) {
-                                CellStyle s = book.createCellStyle();
-                                s.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
-                                s.setFillPattern(SOLID_FOREGROUND);
-                                celda.setCellStyle(s);
-                            }
-
-                            if (i == -1) {
-                                celda.setCellValue(String.valueOf(TablaDeDatos1.getColumnName(j)));
-                                //                        CellUtil.setCellStyleProperties(celda, properties);
-                            } else {
-                                if (j == 3) {
-                                    CellStyle ss = book.createCellStyle();
-                                    ss.setWrapText(true);
-
-                                    if (i % 2 == 0) {
-                                        ss.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
-                                        ss.setFillPattern(SOLID_FOREGROUND);
-
-                                    }
-                                    celda.setCellStyle(ss);
-                                }
-                                celda.setCellValue(String.valueOf(TablaDeDatos1.getValueAt(i, j)));
-                            }
-                            File ad = new File(a);
-                            book.write(new FileOutputStream(a));
+        try{
+            if(fecha1.getDatoFecha() == null){
+                JOptionPane.showMessageDialog(this, "Debes seleccionar fecha de inicio","Advertencia",JOptionPane.WARNING_MESSAGE);
+            }else if(fecha2.getDatoFecha() == null){
+                JOptionPane.showMessageDialog(this, "Debes seleccionar fecha de termino","Advertencia",JOptionPane.WARNING_MESSAGE);
+            }else{
+                try {
+                    Workbook book;
+                    int columna = TablaDeDatos1.getColumnCount();
+                    JFileChooser fc = new JFileChooser();
+                    File archivo;
+                    fc.setFileFilter(new FileNameExtensionFilter("EXCEL (*.xlsx)", "xlsx"));
+                    int n = fc.showSaveDialog(this);
+                    
+                    if (n == JFileChooser.APPROVE_OPTION) {
+                        archivo = fc.getSelectedFile();
+                        String a = "" + archivo;
+                        if (a.endsWith("xls")) {
+                            book = new HSSFWorkbook();
+                        } else {
+                            book = new XSSFWorkbook();
+                            a = archivo + ".xlsx";
                         }
+                        
+                        Sheet hoja = book.createSheet("Reporte de " + tit);
+                        Row fila = hoja.createRow(2);
+                        Cell col = fila.createCell(2);
+
+                        //-------------------------------ESTILOS
+                        org.apache.poi.ss.usermodel.Font font = book.createFont();
+                        CellStyle estilo1 = book.createCellStyle();
+
+                        org.apache.poi.ss.usermodel.Font font3 = book.createFont();
+                        CellStyle estilo3 = book.createCellStyle();
+
+                        font.setBold(true);
+                        font.setColor(IndexedColors.BLACK.getIndex());
+                        font.setFontHeightInPoints((short) 12);
+                        estilo1.setFont(font);
+
+                        estilo1.setAlignment(HorizontalAlignment.LEFT);
+
+                        font3.setBold(false);
+                        font3.setColor(IndexedColors.BLACK.getIndex());
+                        font3.setFontHeightInPoints((short) 15);
+                        estilo3.setFont(font3);
+
+                        estilo3.setAlignment(HorizontalAlignment.CENTER);
+                        estilo3.setWrapText(true);
+
+                        //--------------------------------------
+                        //        hoja.setColumnWidth(2, 5000);
+                        //---------------------------------------
+                        hoja.setColumnWidth(2, 4000);
+                        hoja.setColumnWidth(3, 6500);
+                        hoja.setColumnWidth(4, 6500);
+                        hoja.setColumnWidth(5, 8200);
+                        hoja.setColumnWidth(7, 8200);
+                        hoja.setColumnWidth(13, 8200);
+
+                        org.apache.poi.ss.usermodel.Font font1 = book.createFont();
+                        CellStyle style = book.createCellStyle();
+
+                        font1.setBold(true);
+                        font1.setColor(IndexedColors.WHITE.getIndex());
+                        font1.setFontHeightInPoints((short) 16);
+                        style.setFont(font1);
+
+                        style.setFillBackgroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+                        style.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+                        style.setFillPattern(SOLID_FOREGROUND);
+                        style.setVerticalAlignment(VerticalAlignment.BOTTOM);
+                        style.setAlignment(HorizontalAlignment.CENTER);
+                        style.setWrapText(true);
+
+                        hoja.addMergedRegion(new CellRangeAddress(
+                                2,
+                                2,
+                                2,
+                                columna + 1
+                        ));
+
+                        Map<String, Object> properties = new HashMap<String, Object>();
+                        properties.put(CellUtil.BORDER_TOP, BorderStyle.MEDIUM);
+                        properties.put(CellUtil.BORDER_BOTTOM, BorderStyle.MEDIUM);
+                        properties.put(CellUtil.BORDER_LEFT, BorderStyle.MEDIUM);
+                        properties.put(CellUtil.BORDER_RIGHT, BorderStyle.MEDIUM);
+
+                        properties.put(CellUtil.TOP_BORDER_COLOR, IndexedColors.BLACK.getIndex());
+                        properties.put(CellUtil.BOTTOM_BORDER_COLOR, IndexedColors.BLACK.getIndex());
+                        properties.put(CellUtil.LEFT_BORDER_COLOR, IndexedColors.BLACK.getIndex());
+                        properties.put(CellUtil.RIGHT_BORDER_COLOR, IndexedColors.BLACK.getIndex());
+
+                        col.setCellStyle(style);
+                        col.setCellValue("Reporte de " + tit);
+
+                        for (int i = -1; i < TablaDeDatos1.getRowCount(); i++) {
+                            Row fila10 = hoja.createRow(i + 7);
+                            for (int j = 0; j < columna; j++) {
+                                Cell celda = fila10.createCell(j + 2);
+                                if (i == -1 && (j >= 0 && j <= columna + 1)) {
+                                    CellStyle s = book.createCellStyle();
+                                    org.apache.poi.ss.usermodel.Font f = book.createFont();
+                                    f.setBold(true);
+                                    f.setColor(IndexedColors.WHITE.getIndex());
+                                    s.setFont(f);
+                                    s.setFillForegroundColor(IndexedColors.GREY_50_PERCENT.getIndex());
+                                    s.setFillPattern(SOLID_FOREGROUND);
+                                    celda.setCellStyle(s);
+                                }
+                                if (i > -1 && (j > -1 && j <= columna) && (i % 2 == 0)) {
+                                    CellStyle s = book.createCellStyle();
+                                    s.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+                                    s.setFillPattern(SOLID_FOREGROUND);
+                                    celda.setCellStyle(s);
+                                }
+
+                                if (i == -1) {
+                                    celda.setCellValue(String.valueOf(TablaDeDatos1.getColumnName(j)));
+                                    //                        CellUtil.setCellStyleProperties(celda, properties);
+                                } else {
+                                    if (j == 3) {
+                                        CellStyle ss = book.createCellStyle();
+                                        ss.setWrapText(true);
+
+                                        if (i % 2 == 0) {
+                                            ss.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+                                            ss.setFillPattern(SOLID_FOREGROUND);
+
+                                        }
+                                        celda.setCellStyle(ss);
+                                    }
+                                    celda.setCellValue(String.valueOf(TablaDeDatos1.getValueAt(i, j)));
+                                }
+                                book.write(new FileOutputStream(a));
+                            }
+                        }
+                        book.close();
+                        Desktop.getDesktop().open(new File(a));
                     }
-                    book.close();
-                    Desktop.getDesktop().open(new File(a));
+                } catch (FileNotFoundException ex) {
+                    JOptionPane.showMessageDialog(this, "Error al crear Excel: " + ex, "Error",JOptionPane.ERROR_MESSAGE);
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(this, "Error al crear Excel: " + ex, "Error",JOptionPane.ERROR_MESSAGE);
                 }
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(Reportes.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(Reportes.class.getName()).log(Level.SEVERE, null, ex);
             }
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(this, "Error: "+e);
         }
     }
 

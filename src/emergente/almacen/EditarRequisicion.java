@@ -40,6 +40,16 @@ public class EditarRequisicion extends javax.swing.JDialog {
 }
     }
     
+    public String getEmpleado(Connection con, String empleado) throws SQLException{
+        Statement st = con.createStatement();
+        String sql = "select * from users where employeeNumber like '" + empleado + "'";
+        ResultSet rs = st.executeQuery(sql);
+        while(rs.next()){
+            return (rs.getString("name") + " " + rs.getString("lastname"));
+        }
+        return null;
+    }
+    
     public void verRequisiciones(){
         try{
             Connection con;
@@ -67,6 +77,18 @@ public class EditarRequisicion extends javax.swing.JDialog {
                 datos[13] = rs.getString("remision");
                 miModelo.addRow(datos);
             }
+            
+            String sql2 = "select * from requisicion where idrequisicion like '" + lblRequi.getText() + "'";
+            Statement st2 = con.createStatement();
+            ResultSet rs2 = st2.executeQuery(sql2);
+            while(rs2.next()){
+                String empleado = rs2.getString("empleado");
+                txtEmpleado.setText(getEmpleado(con, empleado));
+                txtDescripcion.setText(rs2.getString("comentarios"));
+                lblCompletado.setText(rs2.getString("completado"));
+                lblFecha.setText(rs2.getString("fecha"));
+                cmbEstado.setSelectedItem(rs2.getString("progreso"));
+            }
         }catch(SQLException e){
             JOptionPane.showMessageDialog(this, "Error: "+e,"Error",JOptionPane.ERROR_MESSAGE);
         }
@@ -84,10 +106,26 @@ public class EditarRequisicion extends javax.swing.JDialog {
         scroll.getViewport().setBackground(new Color(255,255,255));
     }
     
+    public final void limpiarDatos(){
+        txtEmpleado.setText("");
+        lblCompletado.setText("");
+        lblFecha.setText("");
+        txtDescripcion.setText("");
+    }
+    
+    public String getDatTabla(Object text){
+        if(text == null){
+            return null;
+        }else{
+            return text.toString();
+        }
+    }
+    
     public EditarRequisicion(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         setTable(Tabla1, jScrollPane2);
+        limpiarDatos();
     }
 
     @SuppressWarnings("unchecked")
@@ -103,11 +141,24 @@ public class EditarRequisicion extends javax.swing.JDialog {
         txtRequisicion = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         lblRequi = new javax.swing.JLabel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        Tabla1 = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
         pnlGuardar = new javax.swing.JPanel();
         btnGuardar = new javax.swing.JButton();
+        jPanel5 = new javax.swing.JPanel();
+        jPanel4 = new javax.swing.JPanel();
+        jLabel4 = new javax.swing.JLabel();
+        txtEmpleado = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        cmbEstado = new javax.swing.JComboBox<>();
+        jLabel6 = new javax.swing.JLabel();
+        lblCompletado = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        lblFecha = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        txtDescripcion = new javax.swing.JTextArea();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        Tabla1 = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(1191, 671));
@@ -200,30 +251,6 @@ public class EditarRequisicion extends javax.swing.JDialog {
 
         jPanel2.add(jPanel6, java.awt.BorderLayout.PAGE_START);
 
-        jScrollPane2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
-
-        Tabla1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "ID", "No. Requisicion", "Codigo", "Descripcion", "Cantidad", "UM", "Proveedor", "Precio", "Llego", "OC", "Cant. Rec.", "Ubicacion", "Notas", "Remision"
-            }
-        ));
-        Tabla1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                Tabla1MouseClicked(evt);
-            }
-        });
-        jScrollPane2.setViewportView(Tabla1);
-        if (Tabla1.getColumnModel().getColumnCount() > 0) {
-            Tabla1.getColumnModel().getColumn(0).setMinWidth(0);
-            Tabla1.getColumnModel().getColumn(0).setPreferredWidth(0);
-            Tabla1.getColumnModel().getColumn(0).setMaxWidth(0);
-        }
-
-        jPanel2.add(jScrollPane2, java.awt.BorderLayout.CENTER);
-
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
 
         pnlGuardar.setBackground(new java.awt.Color(255, 255, 255));
@@ -256,6 +283,175 @@ public class EditarRequisicion extends javax.swing.JDialog {
 
         jPanel2.add(jPanel3, java.awt.BorderLayout.PAGE_END);
 
+        jPanel5.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel5.setLayout(new java.awt.BorderLayout());
+
+        jPanel4.setBackground(new java.awt.Color(255, 255, 255));
+        java.awt.GridBagLayout jPanel4Layout = new java.awt.GridBagLayout();
+        jPanel4Layout.columnWeights = new double[] {1.0, 1.0, 1.0, 1.0, 3.0};
+        jPanel4.setLayout(jPanel4Layout);
+
+        jLabel4.setFont(new java.awt.Font("Roboto", 1, 12)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(153, 153, 153));
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel4.setText("Empleado");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.ipadx = 4;
+        gridBagConstraints.ipady = 4;
+        gridBagConstraints.insets = new java.awt.Insets(0, 20, 0, 20);
+        jPanel4.add(jLabel4, gridBagConstraints);
+
+        txtEmpleado.setEditable(false);
+        txtEmpleado.setBackground(new java.awt.Color(255, 255, 255));
+        txtEmpleado.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
+        txtEmpleado.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, new java.awt.Color(204, 204, 204)));
+        txtEmpleado.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtEmpleadoFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtEmpleadoFocusLost(evt);
+            }
+        });
+        txtEmpleado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtEmpleadoActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.ipadx = 5;
+        gridBagConstraints.ipady = 5;
+        gridBagConstraints.insets = new java.awt.Insets(7, 20, 7, 20);
+        jPanel4.add(txtEmpleado, gridBagConstraints);
+
+        jLabel5.setFont(new java.awt.Font("Roboto", 1, 12)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(153, 153, 153));
+        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel5.setText("Estado de requisicion");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.ipadx = 4;
+        gridBagConstraints.ipady = 4;
+        gridBagConstraints.insets = new java.awt.Insets(0, 20, 0, 20);
+        jPanel4.add(jLabel5, gridBagConstraints);
+
+        cmbEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "COMPLETO", "INCOMPLETO", "NUEVO" }));
+        cmbEstado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbEstadoActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        jPanel4.add(cmbEstado, gridBagConstraints);
+
+        jLabel6.setFont(new java.awt.Font("Roboto", 1, 12)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(153, 153, 153));
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel6.setText("Completado");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.ipadx = 4;
+        gridBagConstraints.ipady = 4;
+        gridBagConstraints.insets = new java.awt.Insets(0, 20, 0, 20);
+        jPanel4.add(jLabel6, gridBagConstraints);
+
+        lblCompletado.setFont(new java.awt.Font("Roboto", 1, 12)); // NOI18N
+        lblCompletado.setForeground(new java.awt.Color(153, 153, 153));
+        lblCompletado.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblCompletado.setText("true");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.ipadx = 4;
+        gridBagConstraints.ipady = 4;
+        gridBagConstraints.insets = new java.awt.Insets(0, 20, 0, 20);
+        jPanel4.add(lblCompletado, gridBagConstraints);
+
+        jLabel8.setFont(new java.awt.Font("Roboto", 1, 12)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(153, 153, 153));
+        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel8.setText("Fecha de creacion (yyyy-mm-dd)");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.ipadx = 4;
+        gridBagConstraints.ipady = 4;
+        gridBagConstraints.insets = new java.awt.Insets(0, 20, 0, 20);
+        jPanel4.add(jLabel8, gridBagConstraints);
+
+        lblFecha.setFont(new java.awt.Font("Roboto", 1, 12)); // NOI18N
+        lblFecha.setForeground(new java.awt.Color(153, 153, 153));
+        lblFecha.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblFecha.setText("05-10-2024");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.ipadx = 4;
+        gridBagConstraints.ipady = 4;
+        gridBagConstraints.insets = new java.awt.Insets(0, 20, 0, 20);
+        jPanel4.add(lblFecha, gridBagConstraints);
+
+        jLabel10.setFont(new java.awt.Font("Roboto", 1, 12)); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(153, 153, 153));
+        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel10.setText("Comentarios");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.ipadx = 4;
+        gridBagConstraints.ipady = 4;
+        gridBagConstraints.insets = new java.awt.Insets(0, 20, 0, 20);
+        jPanel4.add(jLabel10, gridBagConstraints);
+
+        jScrollPane1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+
+        txtDescripcion.setBackground(new java.awt.Color(255, 255, 255));
+        txtDescripcion.setColumns(20);
+        txtDescripcion.setRows(5);
+        jScrollPane1.setViewportView(txtDescripcion);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(15, 20, 15, 20);
+        jPanel4.add(jScrollPane1, gridBagConstraints);
+
+        jPanel5.add(jPanel4, java.awt.BorderLayout.NORTH);
+
+        jScrollPane2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+
+        Tabla1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "No. Requisicion", "Codigo", "Descripcion", "Cantidad", "UM", "Proveedor", "Precio", "Llego", "OC", "Cant. Rec.", "Ubicacion", "Notas", "Remision"
+            }
+        ));
+        Tabla1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                Tabla1MouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(Tabla1);
+        if (Tabla1.getColumnModel().getColumnCount() > 0) {
+            Tabla1.getColumnModel().getColumn(0).setMinWidth(0);
+            Tabla1.getColumnModel().getColumn(0).setPreferredWidth(0);
+            Tabla1.getColumnModel().getColumn(0).setMaxWidth(0);
+        }
+
+        jPanel5.add(jScrollPane2, java.awt.BorderLayout.CENTER);
+
+        jPanel2.add(jPanel5, java.awt.BorderLayout.CENTER);
+
         jPanel1.add(jPanel2, java.awt.BorderLayout.CENTER);
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
@@ -275,6 +471,7 @@ public class EditarRequisicion extends javax.swing.JDialog {
 
     private void txtRequisicionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtRequisicionActionPerformed
         limpiarTabla();
+        limpiarDatos();
         lblRequi.setText(txtRequisicion.getText());
         verRequisiciones();
     }//GEN-LAST:event_txtRequisicionActionPerformed
@@ -302,43 +499,77 @@ public class EditarRequisicion extends javax.swing.JDialog {
             Connection con;
             Conexion con1 = new Conexion();
             con = con1.getConnection();
-//            "No. Requisicion", "Codigo", "Descripcion", "Cantidad", "UM", "Proveedor", "Precio", "Llego", "OC", "Cant. Rec.", "Ubicacion", "Notas", "Remision"
-            String sql = "update requisiciones set NumRequisicion = ?, codigo = ?,descripcion = ?, cantidad = ?, UM = ?, proveedor = ?, precio = ?, llego = ?,"
+//            "ID", "No. Requisicion", "Codigo", "Descripcion", "Cantidad", "UM", "Proveedor", "Precio", "Llego", "OC", "Cant. Rec.", "Ubicacion", "Notas", "Remision"
+            String sql = "update requisiciones set NumRequisicion = ?, codigo = ?,descripcion = ?, cantidad = ?, UM = ?, proveedor = ?, precio = ?,"
                     + " llego = ?, OC = ?, cantidadRecibida = ?, ubicacion = ?, notas = ?, remision = ? where idrequisiciones = ?";
             try {
                 PreparedStatement pst = con.prepareStatement(sql);
                 int n = 0;
                 for (int i = 0; i < Tabla1.getRowCount(); i++) {
                     try{
-                        pst.setString(1, Tabla1.getValueAt(i, 1).toString());
-                        pst.setString(2, Tabla1.getValueAt(i, 2).toString());
-                        pst.setString(3, Tabla1.getValueAt(i, 3).toString());
-                        pst.setString(4, Tabla1.getValueAt(i, 4).toString());
-                        pst.setString(5, Tabla1.getValueAt(i, 5).toString());
-                        pst.setString(6, Tabla1.getValueAt(i, 6).toString());
-                        pst.setString(7, Tabla1.getValueAt(i, 7).toString());
-                        pst.setString(8, Tabla1.getValueAt(i, 8).toString());
-                        pst.setString(9, Tabla1.getValueAt(i, 9).toString());
-                        pst.setString(10, Tabla1.getValueAt(i, 10).toString());
-                        pst.setString(11, Tabla1.getValueAt(i, 11).toString());
-                        pst.setString(12, Tabla1.getValueAt(i, 12).toString());
-                        pst.setString(13, Tabla1.getValueAt(i, 13).toString());
-                        pst.setString(14, Tabla1.getValueAt(i, 14).toString());
-                        pst.setString(15, Tabla1.getValueAt(i, 0).toString());
+                        pst.setString(1, getDatTabla(Tabla1.getValueAt(i, 1)));//requi
+                        pst.setString(2, getDatTabla(Tabla1.getValueAt(i, 2)));//codigo
+                        pst.setString(3, getDatTabla(Tabla1.getValueAt(i, 3)));//descripcion
+                        pst.setString(4, getDatTabla(Tabla1.getValueAt(i, 4)));//cantidad
+                        pst.setString(5, getDatTabla(Tabla1.getValueAt(i, 5)));//um
+                        pst.setString(6, getDatTabla(Tabla1.getValueAt(i, 6)));//proveedor
+                        pst.setString(7, getDatTabla(Tabla1.getValueAt(i, 7)));//precio
+                        pst.setString(8, getDatTabla(Tabla1.getValueAt(i, 8)));//llego
+                        pst.setString(9, getDatTabla(Tabla1.getValueAt(i, 9)));//oc
+                        pst.setString(10, getDatTabla(Tabla1.getValueAt(i, 10)));//cant
+                        pst.setString(11, getDatTabla(Tabla1.getValueAt(i, 11)));//ubicacion
+                        pst.setString(12, getDatTabla(Tabla1.getValueAt(i, 12)));//notas 
+                        pst.setString(13, getDatTabla(Tabla1.getValueAt(i, 13)));//remision 
+                        pst.setString(14, getDatTabla(Tabla1.getValueAt(i, 0)));
                         
                         n += pst.executeUpdate();
                     }catch(SQLException e){
                         JOptionPane.showMessageDialog(this, "No se guardo la fila numero "+(i + 1));
                     }
                 }
-                if(n > 0){
+                
+                String sql2 = "update requisicion set progreso = ?, completado = ?, comentarios = ? where idrequisicion = ?";
+                PreparedStatement pst2 = con.prepareStatement(sql2);
+                
+                pst2.setString(1, cmbEstado.getSelectedItem().toString());
+                pst2.setString(2, lblCompletado.getText());
+                pst2.setString(3, txtDescripcion.getText());
+                pst2.setString(4, lblRequi.getText());
+                
+                int n1 = pst2.executeUpdate();
+                
+                if(n > 0 && n1 > 0){
                     JOptionPane.showMessageDialog(this, "Datos Guardadaos Correctamente");
+                }else{
+                    JOptionPane.showMessageDialog(this, "No se guardaron los datos","Error",JOptionPane.ERROR_MESSAGE);
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(EditarRequisicion.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_btnGuardarActionPerformed
+
+    private void txtEmpleadoFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtEmpleadoFocusGained
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtEmpleadoFocusGained
+
+    private void txtEmpleadoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtEmpleadoFocusLost
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtEmpleadoFocusLost
+
+    private void txtEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEmpleadoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtEmpleadoActionPerformed
+
+    private void cmbEstadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbEstadoActionPerformed
+        if(isVisible()){
+            switch(cmbEstado.getSelectedIndex()){
+                case 0 -> lblCompletado.setText("SI");
+                case 1 -> lblCompletado.setText("NO");
+                case 2 -> lblCompletado.setText("NO");
+            }
+        }
+    }//GEN-LAST:event_cmbEstadoActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -382,16 +613,29 @@ public class EditarRequisicion extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable Tabla1;
     private javax.swing.JButton btnGuardar;
+    private javax.swing.JComboBox<String> cmbEstado;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel lblCompletado;
+    private javax.swing.JLabel lblFecha;
     private javax.swing.JLabel lblRequi;
     private javax.swing.JPanel pnlGuardar;
+    private javax.swing.JTextArea txtDescripcion;
+    private javax.swing.JTextField txtEmpleado;
     private javax.swing.JTextField txtRequisicion;
     // End of variables declaration//GEN-END:variables
 }

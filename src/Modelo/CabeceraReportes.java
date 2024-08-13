@@ -37,7 +37,7 @@ import javax.swing.JOptionPane;
             table.setTotalWidth(527);
             table.setLockedWidth(true);
             table.getDefaultCell().setFixedHeight(20);
-            Image img = Image.getInstance("src//Recursos/Imagenes/Hubbell.png");
+            Image img = Image.getInstance("src/Recursos/Imagenes/Hubbell.png");
             img.scaleAbsolute(50,50);
             img.setAbsolutePosition(img1x, img1y);
             

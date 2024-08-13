@@ -92,6 +92,7 @@ public class Admin extends javax.swing.JInternalFrame {
         jPanel7 = new javax.swing.JPanel();
         pblEditarRequi = new javax.swing.JPanel();
         btnEditarRequi = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
 
         jPopupMenu1.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
             public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
@@ -166,6 +167,7 @@ public class Admin extends javax.swing.JInternalFrame {
         jPanel5.setBackground(new java.awt.Color(255, 255, 255));
         java.awt.GridBagLayout jPanel5Layout = new java.awt.GridBagLayout();
         jPanel5Layout.columnWeights = new double[] {1.0};
+        jPanel5Layout.rowWeights = new double[] {0.0, 0.0, 1.0};
         jPanel5.setLayout(jPanel5Layout);
 
         jPanel6.setBackground(new java.awt.Color(255, 255, 255));
@@ -250,6 +252,11 @@ public class Admin extends javax.swing.JInternalFrame {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(17, 0, 17, 0);
         jPanel5.add(jPanel7, gridBagConstraints);
+
+        jLabel1.setText(" ");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        jPanel5.add(jLabel1, gridBagConstraints);
 
         jPanel1.add(jPanel5, java.awt.BorderLayout.CENTER);
 
@@ -359,6 +366,7 @@ public class Admin extends javax.swing.JInternalFrame {
     public javax.swing.JButton btnSalidas;
     private javax.swing.JMenuItem editar;
     private javax.swing.JMenuItem eliminar;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;

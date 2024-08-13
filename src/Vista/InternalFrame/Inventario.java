@@ -87,30 +87,17 @@ public class Inventario extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "CODIGO", "DESCRIPCION", "CANTIDAD", "PROVEEDOR", "UBICACION", "MAXIMOS", "MINIMOS", "SAL.", "ENT.", "ACT."
+                "CODIGO", "DESCRIPCION", "CANTIDAD", "PROVEEDOR", "UBICACION", "MAXIMOS", "MINIMOS"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, true, true, true
+                false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        
-        TableColumn col;
-        col = Tabla1.getColumnModel().getColumn(7);
-        col.setCellEditor(new myeditor(Tabla1,this,1));
-        col.setCellRenderer(new renderer(false,1));
-        
-        col = Tabla1.getColumnModel().getColumn(8);
-        col.setCellEditor(new myeditor(Tabla1,this,2));
-        col.setCellRenderer(new renderer(false,2));
-        
-        col = Tabla1.getColumnModel().getColumn(9);
-        col.setCellEditor(new myeditor(Tabla1,this,3));
-        col.setCellRenderer(new renderer(false,3));
         
         Tabla1.getTableHeader().setFont(new Font("Roboto", Font.BOLD, 12));
         Tabla1.getTableHeader().setOpaque(false);
@@ -125,15 +112,6 @@ public class Inventario extends javax.swing.JInternalFrame {
         if (Tabla1.getColumnModel().getColumnCount() > 0) {
             Tabla1.getColumnModel().getColumn(1).setMinWidth(300);
             Tabla1.getColumnModel().getColumn(1).setPreferredWidth(600);
-            Tabla1.getColumnModel().getColumn(7).setMinWidth(50);
-            Tabla1.getColumnModel().getColumn(7).setPreferredWidth(50);
-            Tabla1.getColumnModel().getColumn(7).setMaxWidth(50);
-            Tabla1.getColumnModel().getColumn(8).setMinWidth(50);
-            Tabla1.getColumnModel().getColumn(8).setPreferredWidth(50);
-            Tabla1.getColumnModel().getColumn(8).setMaxWidth(50);
-            Tabla1.getColumnModel().getColumn(9).setMinWidth(50);
-            Tabla1.getColumnModel().getColumn(9).setPreferredWidth(50);
-            Tabla1.getColumnModel().getColumn(9).setMaxWidth(50);
         }
     }
     
@@ -190,13 +168,20 @@ public class Inventario extends javax.swing.JInternalFrame {
             String datos[] = new String[10];
             DefaultTableModel miModelo = (DefaultTableModel) Tabla1.getModel();
             while(rs.next()){
-                datos[0] = rs.getString("codigo");
-                datos[1] = rs.getString("descripcion");
-                datos[2] = rs.getString("cantidad");
-                datos[3] = rs.getString("proveedor");
-                datos[4] = rs.getString("ubicacion");
-                datos[5] = rs.getString("maximos");
-                datos[6] = rs.getString("minimos");
+                String codigo = rs.getString("codigo");
+                datos[0] =  (codigo == null) ? "" : codigo;
+                String descripcion = rs.getString("descripcion");
+                datos[1] = (descripcion == null) ? "" : descripcion;
+                String cantidad = rs.getString("cantidad");
+                datos[2] = (cantidad == null) ? "" : cantidad;
+                String proveedor = rs.getString("proveedor");
+                datos[3] = (proveedor == null) ? "" : proveedor;
+                String ubicacion = rs.getString("ubicacion");
+                datos[4] = (ubicacion == null) ? "" : ubicacion;
+                String maximos = rs.getString("maximos");
+                datos[5] = (maximos == null) ? "" : maximos;
+                String minimos = rs.getString("minimos");
+                datos[6] = (minimos == null) ? "" : minimos;
                 miModelo.addRow(datos);
             }
         }catch(SQLException e){
@@ -425,6 +410,53 @@ public class Inventario extends javax.swing.JInternalFrame {
         }
     }
     
+    public void esa(int seleccionado){
+        JFrame f = (JFrame) JOptionPane.getFrameForComponent(this);
+        infoInventario info = new infoInventario(f,true);
+        info.setLocationRelativeTo(this);
+        boolean puede = true;
+        switch (seleccionado) {
+            case 1:
+                info.lblTitulo.setText("Salida");
+                if(this.salidas == false){
+                    puede = false;
+                }
+                break;
+            case 2:
+                info.lblTitulo.setText("Entrada");
+                info.lblCantidad.setText("Cantidad a ingresar:");
+                if(this.entradas == false){
+                    puede = false;
+                }
+                break;
+            case 3:
+                info.lblTitulo.setText("Actualizar");
+                info.lblCantidad.setText("Cantidad:");
+                if(!this.rol.equals("Admin")){
+                    puede = false;
+                }
+                break;
+            default:
+                break;
+        }
+        if(puede == false){
+            JOptionPane.showMessageDialog(this, "No tienes permiso de realizar este moviento","Error",JOptionPane.ERROR_MESSAGE);
+        }else{
+            info.txtAlmacenista.setText(txtAlmacenista.getText());
+            info.txtEmpleado.setText(txtRequisitor.getText());
+            int row = Tabla1.getSelectedRow();
+            info.txtCodigo.setText(Tabla1.getValueAt(row, 0).toString());
+            info.txtDescripcion.setText(Tabla1.getValueAt(row, 1).toString());
+            info.txtCantStock.setText(Tabla1.getValueAt(row, 2).toString());
+            info.txtProyecto.setText(txtProyecto.getText());
+            boolean band = info.guardado();
+            if(band){
+                limpiarTabla();
+                verDatos();
+            }
+        }
+    }
+    
     public Inventario(String numEmpleado, String nombre) {
         initComponents();
         this.numEmpleado = numEmpleado;
@@ -441,6 +473,10 @@ public class Inventario extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPopupMenu1 = new javax.swing.JPopupMenu();
+        salida = new javax.swing.JMenuItem();
+        entrada = new javax.swing.JMenuItem();
+        axtualizacion = new javax.swing.JMenuItem();
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
@@ -485,6 +521,46 @@ public class Inventario extends javax.swing.JInternalFrame {
         jLabel18 = new javax.swing.JLabel();
         txtDesc = new javax.swing.JTextField();
         jPanel12 = new javax.swing.JPanel();
+
+        jPopupMenu1.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
+            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+            }
+            public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+            }
+            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+                jPopupMenu1PopupMenuWillBecomeVisible(evt);
+            }
+        });
+
+        salida.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
+        salida.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/Iconos/salida_16.png"))); // NOI18N
+        salida.setText("Dar salida de material ");
+        salida.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                salidaActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(salida);
+
+        entrada.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
+        entrada.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/Iconos/entrada_16.png"))); // NOI18N
+        entrada.setText("Dar entrada de material ");
+        entrada.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                entradaActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(entrada);
+
+        axtualizacion.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
+        axtualizacion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/Iconos/act_16.png"))); // NOI18N
+        axtualizacion.setText("Actualizacion de material ");
+        axtualizacion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                axtualizacionActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(axtualizacion);
 
         setBorder(null);
 
@@ -659,19 +735,25 @@ public class Inventario extends javax.swing.JInternalFrame {
 
         Tabla1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
             },
             new String [] {
-                "CODIGO", "DESCRIPCION", "CANTIDAD", "PROVEEDOR", "UBICACION", "MAXIMOS", "MINIMOS", "Salida", "Entrada", "Act."
+                "CODIGO", "DESCRIPCION", "CANTIDAD", "PROVEEDOR", "UBICACION", "MAXIMOS", "MINIMOS"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, true, true, true
+                false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        Tabla1.setComponentPopupMenu(jPopupMenu1);
+        Tabla1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                Tabla1MouseClicked(evt);
             }
         });
         jScrollPane1.setViewportView(Tabla1);
@@ -1060,11 +1142,43 @@ public class Inventario extends javax.swing.JInternalFrame {
         exportarExcel(Tabla1, "Inventario");
     }//GEN-LAST:event_btnExcelActionPerformed
 
+    private void Tabla1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Tabla1MouseClicked
+        
+    }//GEN-LAST:event_Tabla1MouseClicked
+
+    private void salidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salidaActionPerformed
+        esa(1);
+    }//GEN-LAST:event_salidaActionPerformed
+
+    private void entradaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_entradaActionPerformed
+        esa(2);
+    }//GEN-LAST:event_entradaActionPerformed
+
+    private void axtualizacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_axtualizacionActionPerformed
+        esa(3);
+    }//GEN-LAST:event_axtualizacionActionPerformed
+
+    private void jPopupMenu1PopupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_jPopupMenu1PopupMenuWillBecomeVisible
+        if(Tabla1.getSelectedRow() >= 0){
+            salida.setEnabled(true);
+            entrada.setEnabled(true);
+            axtualizacion.setEnabled(true);
+            salida.setText("Salida de material " + Tabla1.getValueAt(Tabla1.getSelectedRow(), 0));
+            entrada.setText("Entrada de material " + Tabla1.getValueAt(Tabla1.getSelectedRow(), 0));
+            axtualizacion.setText("Actualizacion de material " + Tabla1.getValueAt(Tabla1.getSelectedRow(), 0));
+        }else{
+            salida.setEnabled(false);
+            entrada.setEnabled(false);
+            axtualizacion.setEnabled(false);
+        }
+    }//GEN-LAST:event_jPopupMenu1PopupMenuWillBecomeVisible
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel PanelX;
     private javax.swing.JPanel Salida;
     public javax.swing.JTable Tabla1;
+    private javax.swing.JMenuItem axtualizacion;
     private javax.swing.JButton btnActualizar;
     private Componentes.Boton btnAgregar;
     private Componentes.Boton btnAgregar1;
@@ -1072,6 +1186,7 @@ public class Inventario extends javax.swing.JInternalFrame {
     private Componentes.Boton btnExcel;
     private javax.swing.JButton btnInicio;
     private javax.swing.JButton btnSalida;
+    private javax.swing.JMenuItem entrada;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel15;
@@ -1093,6 +1208,7 @@ public class Inventario extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
+    private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblX;
     private javax.swing.JPanel panelActualizar;
@@ -1100,6 +1216,7 @@ public class Inventario extends javax.swing.JInternalFrame {
     private javax.swing.JPanel panelEntrada;
     private javax.swing.JPanel panelInicio;
     private javax.swing.JPanel panelSalida;
+    private javax.swing.JMenuItem salida;
     public javax.swing.JTextField txtAlmacenista;
     public javax.swing.JTextField txtCodigo;
     public javax.swing.JTextField txtDesc;
@@ -1124,13 +1241,14 @@ class renderer extends JLabel implements TableCellRenderer {
             boton.setBackground(new java.awt.Color(255, 255, 255));
         switch (seleccionado) {
             case 1:
-                boton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/recursos/Iconos/salida_16.png"))); // NOI18N
+                JOptionPane.showMessageDialog(this,getClass().getResource("/recursos/Iconos/salida_16.png"));
+//                boton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/recursos/Iconos/salida_16.png"))); // NOI18N
                 break;
             case 2:
-                boton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/recursos/Iconos/entrada_16.png"))); // NOI18N
+//                boton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/recursos/Iconos/entrada_16.png"))); // NOI18N
                 break;
             case 3:
-                boton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/recursos/Iconos/act_16.png"))); // NOI18N
+//                boton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/recursos/Iconos/act_16.png"))); // NOI18N
                 break;
             default:
                 break;
@@ -1164,51 +1282,7 @@ class myeditor extends AbstractCellEditor implements TableCellEditor, ActionList
     }
 
     public void actionPerformed(ActionEvent e) {
-        JFrame f = (JFrame) JOptionPane.getFrameForComponent(cxp);
-        infoInventario info = new infoInventario(f,true);
-        info.setLocationRelativeTo(cxp);
-        boolean puede = true;
-        switch (seleccionado) {
-            case 1:
-                info.lblTitulo.setText("Salida");
-                if(cxp.salidas == false){
-                    puede = false;
-                }
-                break;
-            case 2:
-                info.lblTitulo.setText("Entrada");
-                info.lblCantidad.setText("Cantidad a ingresar:");
-                if(cxp.entradas == false){
-                    puede = false;
-                }
-                break;
-            case 3:
-                info.lblTitulo.setText("Actualizar");
-                info.lblCantidad.setText("Cantidad:");
-                if(!cxp.rol.equals("Admin")){
-                    puede = false;
-                }
-                break;
-            default:
-                break;
-        }
-        if(puede == false){
-            JOptionPane.showMessageDialog(cxp, "No tienes permiso de realizar este moviento","Error",JOptionPane.ERROR_MESSAGE);
-        }else{
-            info.txtAlmacenista.setText(cxp.txtAlmacenista.getText());
-            info.txtEmpleado.setText(cxp.txtRequisitor.getText());
-            int row = cxp.Tabla1.getSelectedRow();
-            info.txtCodigo.setText(cxp.Tabla1.getValueAt(row, 0).toString());
-            info.txtDescripcion.setText(cxp.Tabla1.getValueAt(row, 1).toString());
-            info.txtCantStock.setText(cxp.Tabla1.getValueAt(row, 2).toString());
-            info.txtProyecto.setText(cxp.txtProyecto.getText());
-            boolean band = info.guardado();
-            if(band){
-                cxp.limpiarTabla();
-                cxp.verDatos();
-            }
-            fireEditingStopped();
-        }
+        
     }
 
     public Object getCellEditorValue() {

@@ -5,9 +5,12 @@
         <group>
             <file>file:/C:/Users/USUARIO%201/Documents/NetBeansProjects/InventarioConnector/src/Vista/Inicio.java</file>
             <file>file:/C:/Users/USUARIO%201/Documents/NetBeansProjects/InventarioConnector/src/emergente/almacen/EditarRequisicion.java</file>
+            <file>file:/C:/Users/USUARIO%201/Documents/NetBeansProjects/InventarioConnector/src/Vista/InternalFrame/Reportes.java</file>
             <file>file:/C:/Users/USUARIO%201/Documents/NetBeansProjects/InventarioConnector/src/Vista/InicioSesion.java</file>
+            <file>file:/C:/Users/USUARIO%201/Documents/NetBeansProjects/InventarioConnector/src/Vista/InternalFrame/Inventario.java</file>
             <file>file:/C:/Users/USUARIO%201/Documents/NetBeansProjects/InventarioConnector/src/Vista/InternalFrame/Admin.java</file>
             <file>file:/C:/Users/USUARIO%201/Documents/NetBeansProjects/InventarioConnector/src/Vista/InternalFrame/Almacen.java</file>
+            <file>file:/C:/Users/USUARIO%201/Documents/NetBeansProjects/InventarioConnector/src/Vista/InternalFrame/Requisiciones.java</file>
         </group>
     </open-files>
 </project-private>
